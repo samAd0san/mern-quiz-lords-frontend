@@ -1,4 +1,5 @@
 import React from 'react';
+import '../styles/App.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 /* Import Components */
@@ -24,7 +25,7 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <div className="text-3xl font-bold underline">
+    <div>
       <RouterProvider router={router} />
     </div>
   );
