@@ -37,7 +37,7 @@ const Main = () => {
             <div>
                 <Link 
                     className='btn inline-block px-6 py-3 bg-primary text-white font-bold rounded-md hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-secondary focus:ring-opacity-50'
-                    to={'quiz'}
+                    to={'/quiz'}
                 >
                     Start Quiz
                 </Link>
