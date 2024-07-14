@@ -18,12 +18,12 @@ export const questionReducer = createSlice({
             }
         }
     }
-})
+});
 
 /*
     Action: An event or instruction that describes what happened in the app.
     Reducer: A function that updates the app’s state based on actions.
 */
-export const {startExamAction} = questionReducer.actions // Export the action
+export const {startExamAction} = questionReducer.actions // Export the action*
 
 export default questionReducer.reducer // Export the reducer

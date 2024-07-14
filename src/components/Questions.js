@@ -7,12 +7,12 @@ export default function Questions() {
     const question = data[0];
 
     useEffect(() => {
-        console.log(question);
+        // console.log(question);
     }, [question]);
 
     function onSelect(e) {
         setChecked(e.target.value);
-        console.log('radio button change');
+        // console.log('radio button change');
     }
 
     return (
