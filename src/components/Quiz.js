@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Questions from './Questions';
 import { useDispatch, useSelector } from 'react-redux';
 import { MoveNextQuestion, MovePrevQuestion } from '../hooks/FetchQuestions';
@@ -6,6 +6,8 @@ import { PushAnswer } from '../hooks/setResult';
 
 // This component displays the quiz application
 export default function Quiz() {
+
+    const [check, setChecked] = useState(undefined)
 
     // Gets the state from the store
     const state = useSelector(state => state)
@@ -23,7 +25,7 @@ export default function Quiz() {
 
         if (trace < queue.length) {
             dispatch(MoveNextQuestion());
-            dispatch(PushAnswer(1)) // Basically 1 will be added as the answer as we go next...
+            dispatch(PushAnswer(check)) 
         }
     }
 
@@ -35,13 +37,18 @@ export default function Quiz() {
         }
     }
 
+    function onChecked(check) {
+        console.log(check)
+        setChecked(check)
+    }
+
     return (
         <div className="min-h-screen bg-gray-200 flex flex-col justify-center items-center">
             <h1 className="text-4xl font-bold text-primary mb-8">Quiz Application</h1>
 
             {/* Display questions */}
             <div className="w-full max-w-3xl mb-8">
-                <Questions />
+                <Questions onChecked={onChecked}/>
             </div>
 
             <div className="flex justify-between w-full max-w-3xl">

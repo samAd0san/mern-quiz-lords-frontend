@@ -3,7 +3,7 @@ import { useFetchQuestion } from '../hooks/FetchQuestions';
 import { useSelector } from 'react-redux';
 
 // This component displays the questions and options, it is a usable component
-export default function Questions() {
+export default function Questions({ onChecked }) {
     const [checked, setChecked] = useState(undefined); // State to track the selected radio button option
     const [{ isLoading, apiData, serverError }, setGetData] = useFetchQuestion(); // Use custom hook to fetch questions
 
@@ -15,8 +15,9 @@ export default function Questions() {
         // console.log(questions); // This will give only the current question
     }, [questions]);
 
-    function onSelect(e) {
+    function onSelect(i) {
         // console.log('radio button change');
+        onChecked(i);
     }
 
     return (
@@ -31,7 +32,7 @@ export default function Questions() {
                             value={q}
                             name="options"
                             id={`q${i}-option`}
-                            onChange={onSelect}
+                            onChange={() => onSelect(i)}
                             className="mr-2"
                         />
                         <label className="text-lg text-tertiary" htmlFor={`q${i}-option`}>{q}</label>
