@@ -5,10 +5,10 @@ const Main = () => {
     const inputRef = useRef(null);
 
     return (
-        <div className="min-h-screen bg-gray-100 flex flex-col justify-center items-center">
-            <h1 className="text-4xl font-bold text-blue-600 mb-8">Quiz Application</h1>
+        <div className="min-h-screen bg-gray-200 flex flex-col justify-center items-center">
+            <h1 className="text-4xl font-bold text-primary mb-8">Quiz Application</h1>
 
-            <ol className="list-decimal list-inside text-lg text-gray-800 font-medium space-y-1 mb-8">
+            <ol className="list-decimal list-inside text-lg text-tertiary font-medium space-y-1 mb-8">
                 <li>You will be asked 10 questions one after another.</li>
                 <li>10 points is awarded for the correct answer.</li>
                 <li>Each question has three options. You can choose only one option.</li>
@@ -21,7 +21,7 @@ const Main = () => {
                     ref={inputRef} 
                     type="text" 
                     placeholder='Enter your name' 
-                    className="w-full px-3 py-2 bg-gray-200 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-3 py-2 bg-gray-200 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-secondary focus:border-secondary"
                 />
             </form>
 
@@ -30,13 +30,13 @@ const Main = () => {
                     ref={inputRef} 
                     type="text" 
                     placeholder='Roll number' 
-                    className="w-full px-3 py-2 bg-gray-200  border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-3 py-2 bg-gray-200 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-secondary focus:border-secondary"
                 />
             </form>
 
             <div>
                 <Link 
-                    className='btn inline-block px-6 py-3 bg-blue-500 text-white font-bold rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50'
+                    className='btn inline-block px-6 py-3 bg-primary text-white font-bold rounded-md hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-secondary focus:ring-opacity-50'
                     to={'quiz'}
                 >
                     Start Quiz
