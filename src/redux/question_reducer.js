@@ -23,6 +23,7 @@ export const questionReducer = createSlice({
 /*
     Action: An event or instruction that describes what happened in the app.
     Reducer: A function that updates the app’s state based on actions.
+    Dispatch: A function used to send actions to the Redux store to update the state.
 */
 export const {startExamAction} = questionReducer.actions // Export the action*
 
