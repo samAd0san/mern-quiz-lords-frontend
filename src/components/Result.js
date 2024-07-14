@@ -1,11 +1,18 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
 import ResultTable from './ResultTable';
+import { useDispatch } from 'react-redux';
+import { resetAllAction } from '../redux/question_reducer';
+import { resetResultAction } from '../redux/result_reducer';
 
 export default function Result() {
 
-    function onRestart(){
+    const dispatch = useDispatch();
+
+    function onRestart(){ // Function to restart the quiz
         console.log('on Restart')
+        dispatch(resetAllAction()); // reset the question state
+        dispatch(resetResultAction()); // reset the result state
     }
 
     return (

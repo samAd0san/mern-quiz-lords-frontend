@@ -3,6 +3,7 @@ import Questions from './Questions';
 import { useDispatch, useSelector } from 'react-redux';
 import { MoveNextQuestion, MovePrevQuestion } from '../hooks/FetchQuestions';
 import { PushAnswer } from '../hooks/setResult';
+import { Navigate } from 'react-router-dom';
 
 // This component displays the quiz application
 export default function Quiz() {
@@ -10,12 +11,12 @@ export default function Quiz() {
     const [check, setChecked] = useState(undefined)
 
     // Gets the state from the store
-    const state = useSelector(state => state)
-    const {queue, trace} = useSelector(state => state.questions)
+    const result = useSelector(state => state.result.result);
+    const {queue, trace} = useSelector(state => state.questions);
     const dispatch = useDispatch(); // Get the dispatch function to send actions to the Redux store
 
     useEffect(() => {
-        console.log(state)
+        console.log(result)
         // console.log(queue)
         // console.log(trace) // This will give the current question index
     });
@@ -25,13 +26,15 @@ export default function Quiz() {
 
         if (trace < queue.length) {
             dispatch(MoveNextQuestion());
-            dispatch(PushAnswer(check)) 
+            
+            if (result.length <= trace) { // If the result array is less than the current question index
+                dispatch(PushAnswer(check)) // Push the selected answer to the result array
+            }
         }
     }
 
     function onPrev() {
         // console.log('On prev click');
-
         if (trace > 0) {
             dispatch(MovePrevQuestion());
         }
@@ -40,6 +43,10 @@ export default function Quiz() {
     function onChecked(check) {
         console.log(check)
         setChecked(check)
+    }
+
+    if (result.length && result.length >= queue.length) { // If the result array is equal to the number of questions
+        return <Navigate to={'/result'} replace={true}></Navigate>
     }
 
     return (
