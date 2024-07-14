@@ -1,23 +1,33 @@
 import React, { useEffect } from 'react';
 import Questions from './Questions';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { MoveNextQuestion, MovePrevQuestion } from '../hooks/FetchQuestions';
 
 // This component displays the quiz application
 export default function Quiz() {
 
     // Gets the state from the store
-    const state = useSelector(state => state)
+    const {queue, trace} = useSelector(state => state.questions)
+    const dispatch = useDispatch(); // Get the dispatch function to send actions to the Redux store
 
     useEffect(() => {
-        // console.log(state) // shows the current state in the console
+        console.log(trace) // This will give the current question index
     });
 
     function onNext() {
-        console.log('On next click');
+        // console.log('On next click');
+
+        if (trace < queue.length - 1) {
+            dispatch(MoveNextQuestion());
+        }
     }
 
     function onPrev() {
-        console.log('On prev click');
+        // console.log('On prev click');
+
+        if (trace > 0) {
+            dispatch(MovePrevQuestion());
+        }
     }
 
     return (

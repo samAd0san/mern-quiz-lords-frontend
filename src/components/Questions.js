@@ -12,7 +12,7 @@ export default function Questions() {
 
 
     useEffect(() => {
-        console.log(questions); // This will give only the current question
+        // console.log(questions); // This will give only the current question
     }, [questions]);
 
     function onSelect(e) {

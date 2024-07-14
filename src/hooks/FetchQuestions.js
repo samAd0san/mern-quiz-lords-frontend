@@ -48,3 +48,19 @@ export const useFetchQuestion = () => {
     // Return the current state and the state updater function
     return [getData, setGetData];
 }
+
+export const MoveNextQuestion = () => async (dispatch) => {
+    try {
+        dispatch(Action.moveNextAction()); // increment the current question index
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const MovePrevQuestion = () => async (dispatch) => {
+    try {
+        dispatch(Action.movePrevAction()); // decrement the current question index
+    } catch (error) {
+        console.log(error)
+    }
+}
