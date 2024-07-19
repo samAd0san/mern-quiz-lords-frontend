@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useDispatch } from "react-redux";
-import data from "../database/data";
+import data, { answers } from "../database/data";
 
 /** redux actions */
 import * as Action from '../redux/question_reducer'
@@ -32,7 +32,7 @@ export const useFetchQuestion = () => {
                     setGetData(prev => ({...prev, apiData: question}));
 
                     /** Dispatch the action to update the Redux store with the question data */
-                    dispatch(Action.startExamAction(question))
+                    dispatch(Action.startExamAction({question, answers}))
                 } else {
                     // Throw an error if no questions are available
                     throw new Error("No Questions Available");

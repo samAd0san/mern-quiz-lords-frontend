@@ -1,13 +1,24 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom';
 import ResultTable from './ResultTable';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { attempts_Number, earnPoints_Number, flagResult } from '../helper/helper';
 import { resetAllAction } from '../redux/question_reducer';
 import { resetResultAction } from '../redux/result_reducer';
 
 export default function Result() {
 
     const dispatch = useDispatch();
+    const { questions : { queue ,answers}, result : { result, userId}}  = useSelector(state => state)
+
+    useEffect(() => {
+        console.log(flag)
+    })
+
+    const totalPoints = queue.length * 10; 
+    const attempts = attempts_Number(result);
+    const earnPoints = earnPoints_Number(result, answers, 10)
+    const flag = flagResult(totalPoints, earnPoints)
 
     function onRestart(){ // Function to restart the quiz
         console.log('on Restart')
@@ -26,23 +37,23 @@ export default function Result() {
                 </div>
                 <div className='flex justify-between mb-4'>
                     <span className='text-lg text-tertiary'>Total Quiz Points:</span>
-                    <span className='font-bold text-lg text-gray-800'>50</span>
+                    <span className='font-bold text-lg text-gray-800'>{totalPoints || 0}</span>
                 </div>
                 <div className='flex justify-between mb-4'>
                     <span className='text-lg text-tertiary'>Total Questions:</span>
-                    <span className='font-bold text-lg text-gray-800'>05</span>
+                    <span className='font-bold text-lg text-gray-800'>{ queue.length || 0}</span>
                 </div>
                 <div className='flex justify-between mb-4'>
                     <span className='text-lg text-tertiary'>Total Attempts:</span>
-                    <span className='font-bold text-lg text-gray-800'>03</span>
+                    <span className='font-bold text-lg text-gray-800'>{attempts || 0}</span>
                 </div>
                 <div className='flex justify-between mb-4'>
                     <span className='text-lg text-tertiary'>Total Earn Points:</span>
-                    <span className='font-bold text-lg text-gray-800'>30</span>
+                    <span className='font-bold text-lg text-gray-800'>{earnPoints || 0}</span>
                 </div>
                 <div className='flex justify-between mb-4'>
                     <span className='text-lg text-tertiary'>Quiz Result:</span>
-                    <span className='font-bold text-lg text-gray-800'>Passed</span>
+                    <span style={{ color : `${flag ? "#2aff95" : "#ff2a66" }` }} className='bold'>{flag ? "Passed" : "Failed"}</span>
                 </div>
             </div>
 

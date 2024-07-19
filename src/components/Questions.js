@@ -7,7 +7,7 @@ import { updateResult } from '../hooks/setResult';
 export default function Questions({ onChecked }) {
     const [checked, setChecked] = useState(undefined); // State to track the selected radio button option
     const { trace } = useSelector(state => state.questions) // Get the current question index from the Redux store
-
+    const result = useSelector(state => state.result.result);
     const [{ isLoading, apiData, serverError }, setGetData] = useFetchQuestion(); // Use custom hook to fetch questions
 
     // Select the current question from Redux store
@@ -23,6 +23,7 @@ export default function Questions({ onChecked }) {
         // console.log('radio button change');
         onChecked(i);
         setChecked(i);
+        dispatch(updateResult({ trace, checked}));
     }
 
     return (
@@ -41,6 +42,7 @@ export default function Questions({ onChecked }) {
                             className="mr-2"
                         />
                         <label className="text-lg text-tertiary" htmlFor={`q${i}-option`}>{q}</label>
+                        <div className={`check ${result[trace] == i ? 'checked' : ''}`}></div>
                     </li>
                 ))}
             </ul>

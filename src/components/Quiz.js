@@ -31,6 +31,8 @@ export default function Quiz() {
                 dispatch(PushAnswer(check)) // Push the selected answer to the result array
             }
         }
+        /** reset the value of the checked variable */
+        setChecked(undefined)
     }
 
     function onPrev() {
@@ -59,7 +61,7 @@ export default function Quiz() {
             </div>
 
             <div className="flex justify-between w-full max-w-3xl">
-                <button className="btn bg-primary text-white font-bold py-2 px-4 rounded-md hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-secondary" onClick={onPrev}>Prev</button>
+                {trace > 0 ? <button className="btn bg-primary text-white font-bold py-2 px-4 rounded-md hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-secondary" onClick={onPrev}>Prev</button> : <div></div> }
                 <button className="btn bg-primary text-white font-bold py-2 px-4 rounded-md hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-secondary" onClick={onNext}>Next</button>
             </div>
         </div>
