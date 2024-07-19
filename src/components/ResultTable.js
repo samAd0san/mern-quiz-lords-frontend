@@ -13,7 +13,7 @@ export default function ResultTable() {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr className='border-b'>
+                    <tr className='border-b text-center'>
                         <td className='px-4 py-2'>Abdus Samad</td>
                         <td className='px-4 py-2'>03</td>
                         <td className='px-4 py-2'>20</td>

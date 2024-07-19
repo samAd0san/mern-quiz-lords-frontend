@@ -1,4 +1,5 @@
 import React, { useRef } from 'react';
+import logo from '../assets/lords_logo.jpeg';
 import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom';
 import { setUserId } from '../redux/result_reducer'
@@ -15,6 +16,7 @@ const Main = () => {
 
     return (
         <div className="min-h-screen bg-gray-200 flex flex-col justify-center items-center">
+            <img src={logo} alt="Lords-logo Logo" className="h-200 w-200 ml-2 rounded-3xl" />
             <h1 className="text-4xl font-bold text-primary mb-8">Quiz Application</h1>
 
             <ol className="list-decimal list-inside text-lg text-tertiary font-medium space-y-1 mb-8">
