@@ -30,7 +30,7 @@ export default function Result() {
         <div className='min-h-screen bg-gray-00 flex flex-col justify-center items-center'>
             <h1 className='text-4xl font-bold text-secondary mb-8'>Quiz Application</h1>
 
-            <div className='bg-white p-6 rounded-md shadow-md w-full max-w-3xl mb-8'>
+            <div className='bg-white p-6 rounded-md shadow-lg border border-gray-200 w-full max-w-3xl mb-8'>
                 <div className='flex justify-between mb-4'>
                     <span className='text-lg text-tertiary'>Username</span>
                     <span className='font-bold text-lg text-gray-800'>Abdus Samad</span>
