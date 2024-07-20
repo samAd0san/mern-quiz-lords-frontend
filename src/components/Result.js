@@ -27,8 +27,8 @@ export default function Result() {
     }
 
     return (
-        <div className='min-h-screen bg-gray-200 flex flex-col justify-center items-center'>
-            <h1 className='text-4xl font-bold text-primary mb-8'>Quiz Application</h1>
+        <div className='min-h-screen bg-gray-100 flex flex-col justify-center items-center'>
+            <h1 className='text-4xl font-bold text-secondary mb-8'>Quiz Application</h1>
 
             <div className='bg-white p-6 rounded-md shadow-md w-full max-w-3xl mb-8'>
                 <div className='flex justify-between mb-4'>
@@ -59,7 +59,7 @@ export default function Result() {
 
             {/* Restart Button */}
             <div className='mb-8'>
-                <Link to={'/'} onClick={onRestart} className='btn bg-primary text-white font-bold py-2 px-4 rounded-md hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-secondary'>Restart</Link>
+                <Link to={'/'} onClick={onRestart} className='btn bg-secondary text-white font-bold py-2 px-4 rounded-md hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-secondary'>Restart</Link>
             </div>
 
             {/* Displaying the Result Table */}

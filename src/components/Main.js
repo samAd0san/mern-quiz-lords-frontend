@@ -1,5 +1,4 @@
 import React, { useRef } from 'react';
-import logo from '../assets/lords_logo.jpeg';
 import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom';
 import { setUserId } from '../redux/result_reducer'
@@ -15,11 +14,10 @@ const Main = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gray-200 flex flex-col justify-center items-center">
-            <img src={logo} alt="Lords-logo Logo" className="h-200 w-200 ml-2 rounded-3xl" />
-            <h1 className="text-4xl font-bold text-primary mb-2 mt-4">Quiz Application</h1>
+        <div className="min-h-screen bg-gray-100 flex flex-col justify-center items-center">
+            <h1 className="text-4xl font-bold text-secondary mb-4 mt-4">Quiz Application</h1>
 
-            <ol className="list-decimal list-inside text-lg text-tertiary font-medium space-y-1 mb-8">
+            <ol className="list-decimal list-inside text-lg text-black font-medium space-y-1 mb-8">
                 <li>You will be asked 30 questions one after another.</li>
                 <li>One Mark is awarded for the correct answer.</li>
                 <li>The result will be declared at the end of the quiz.</li>
@@ -30,7 +28,7 @@ const Main = () => {
                     ref={inputRef} 
                     type="text" 
                     placeholder='Enter your name' 
-                    className="w-full px-3 py-2 bg-gray-200 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-secondary focus:border-secondary"
+                    className="w-full px-3 py-2 bg-gray-100 border border-secondary rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-secondary focus:border-secondary"
                 />
             </form>
 
@@ -39,13 +37,13 @@ const Main = () => {
                     ref={inputRef} 
                     type="text" 
                     placeholder='Roll number' 
-                    className="w-full px-3 py-2 bg-gray-200 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-secondary focus:border-secondary"
+                    className="w-full px-3 py-2 bg-gray-100 border border-secondary rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-secondary focus:border-secondary"
                 />
             </form>
 
             <div>
                 <Link 
-                    className='btn inline-block px-6 py-3 bg-primary text-white font-bold rounded-md hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-secondary focus:ring-opacity-50'
+                    className='btn inline-block px-6 py-3 bg-secondary text-white font-bold rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-secondary focus:ring-opacity-50'
                     to={'/quiz'}
                     onClick={startQuiz}
                 >

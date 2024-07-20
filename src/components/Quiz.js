@@ -52,8 +52,8 @@ export default function Quiz() {
     }
 
     return (
-        <div className="min-h-screen bg-gray-200 flex flex-col justify-center items-center">
-            <h1 className="text-4xl font-bold text-primary mb-8">Quiz Application</h1>
+        <div className="min-h-screen bg-gray-100 flex flex-col justify-center items-center">
+            <h1 className="text-4xl font-bold text-secondary mb-8">Quiz Application</h1>
 
             {/* Display questions */}
             <div className="w-full max-w-3xl mb-8">
@@ -61,8 +61,8 @@ export default function Quiz() {
             </div>
 
             <div className="flex justify-between w-full max-w-3xl">
-                {trace > 0 ? <button className="btn bg-primary text-white font-bold py-2 px-4 rounded-md hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-secondary" onClick={onPrev}>Prev</button> : <div></div> }
-                <button className="btn bg-primary text-white font-bold py-2 px-4 rounded-md hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-secondary" onClick={onNext}>Next</button>
+                {trace > 0 ? <button className="btn bg-secondary text-white font-bold py-2 px-4 rounded-md hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-secondary" onClick={onPrev}>Prev</button> : <div></div> }
+                <button className="btn bg-secondary text-white font-bold py-2 px-4 rounded-md hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-secondary" onClick={onNext}>Next</button>
             </div>
         </div>
     );

@@ -28,7 +28,7 @@ export default function Questions({ onChecked }) {
 
     return (
         <div className="p-6 bg-white rounded-md shadow-md">
-            <h2 className="text-2xl font-bold text-primary mb-4">{questions?.question}</h2>
+            <h2 className="text-2xl font-bold text-secondary mb-4">{questions?.question}</h2>
 
             <ul key={questions?.id} className="space-y-4">
                 {questions?.options.map((q, i) => (

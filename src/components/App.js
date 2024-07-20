@@ -7,6 +7,8 @@ import Main from './Main';
 import Quiz from './Quiz';
 import Result from './Result';
 import { CheckUserExist } from '../helper/helper';
+import Header from './Header';
+import Footer from './Footer';
 
 /* Define Routes */
 const router = createBrowserRouter([
@@ -27,7 +29,9 @@ const router = createBrowserRouter([
 function App() {
   return (
     <div>
+      <Header />
       <RouterProvider router={router} />
+      <Footer />
     </div>
   );
 }
