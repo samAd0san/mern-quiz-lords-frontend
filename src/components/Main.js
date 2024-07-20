@@ -17,13 +17,11 @@ const Main = () => {
     return (
         <div className="min-h-screen bg-gray-200 flex flex-col justify-center items-center">
             <img src={logo} alt="Lords-logo Logo" className="h-200 w-200 ml-2 rounded-3xl" />
-            <h1 className="text-4xl font-bold text-primary mb-8">Quiz Application</h1>
+            <h1 className="text-4xl font-bold text-primary mb-2 mt-4">Quiz Application</h1>
 
             <ol className="list-decimal list-inside text-lg text-tertiary font-medium space-y-1 mb-8">
-                <li>You will be asked 10 questions one after another.</li>
-                <li>10 points is awarded for the correct answer.</li>
-                <li>Each question has three options. You can choose only one option.</li>
-                <li>You can review and change answers before the quiz finishes.</li>
+                <li>You will be asked 30 questions one after another.</li>
+                <li>One Mark is awarded for the correct answer.</li>
                 <li>The result will be declared at the end of the quiz.</li>
             </ol>
 

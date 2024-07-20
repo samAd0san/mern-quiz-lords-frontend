@@ -15,9 +15,9 @@ export default function Result() {
         console.log(flag)
     })
 
-    const totalPoints = queue.length * 10; 
+    const totalPoints = queue.length * 1; 
     const attempts = attempts_Number(result);
-    const earnPoints = earnPoints_Number(result, answers, 10)
+    const earnPoints = earnPoints_Number(result, answers, 1)
     const flag = flagResult(totalPoints, earnPoints)
 
     function onRestart(){ // Function to restart the quiz
@@ -36,7 +36,7 @@ export default function Result() {
                     <span className='font-bold text-lg text-gray-800'>Abdus Samad</span>
                 </div>
                 <div className='flex justify-between mb-4'>
-                    <span className='text-lg text-tertiary'>Total Quiz Points:</span>
+                    <span className='text-lg text-tertiary'>Total Marks:</span>
                     <span className='font-bold text-lg text-gray-800'>{totalPoints || 0}</span>
                 </div>
                 <div className='flex justify-between mb-4'>
@@ -44,11 +44,11 @@ export default function Result() {
                     <span className='font-bold text-lg text-gray-800'>{ queue.length || 0}</span>
                 </div>
                 <div className='flex justify-between mb-4'>
-                    <span className='text-lg text-tertiary'>Total Attempts:</span>
+                    <span className='text-lg text-tertiary'>Questions Attempted:</span>
                     <span className='font-bold text-lg text-gray-800'>{attempts || 0}</span>
                 </div>
                 <div className='flex justify-between mb-4'>
-                    <span className='text-lg text-tertiary'>Total Earn Points:</span>
+                    <span className='text-lg text-tertiary'>Your Marks:</span>
                     <span className='font-bold text-lg text-gray-800'>{earnPoints || 0}</span>
                 </div>
                 <div className='flex justify-between mb-4'>
