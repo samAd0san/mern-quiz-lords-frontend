@@ -27,7 +27,7 @@ export default function Result() {
     }
 
     return (
-        <div className='min-h-screen bg-gray-100 flex flex-col justify-center items-center'>
+        <div className='min-h-screen bg-gray-00 flex flex-col justify-center items-center'>
             <h1 className='text-4xl font-bold text-secondary mb-8'>Quiz Application</h1>
 
             <div className='bg-white p-6 rounded-md shadow-md w-full max-w-3xl mb-8'>
@@ -53,7 +53,7 @@ export default function Result() {
                 </div>
                 <div className='flex justify-between mb-4'>
                     <span className='text-lg text-tertiary'>Quiz Result:</span>
-                    <span style={{ color : `${flag ? "#2aff95" : "#ff2a66" }` }} className='bold'>{flag ? "Passed" : "Failed"}</span>
+                    <span style={{ color : `${flag ? "#10B981" : "#ff2a66" }` }} className='bold'>{flag ? "Passed" : "Failed"}</span>
                 </div>
             </div>
 
