@@ -17,7 +17,7 @@ export default function ResultTable() {
             <table className='min-w-full bg-white border border-gray-300 mt-20 mb-20'>
                 <thead className='bg-secondary text-white'>
                     <tr>
-                        <th className='px-4 py-2'>Name</th>
+                        <th className='py-2'>Roll Number</th>
                         <th className='px-4 py-2'>Attempted</th>
                         <th className='px-4 py-2'>Marks</th>
                         <th className='px-4 py-2'>Result</th>
