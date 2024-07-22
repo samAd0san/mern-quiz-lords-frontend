@@ -47,7 +47,7 @@ export default function Quiz() {
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col justify-center items-center">
       <h1 className="text-4xl font-bold text-secondary mb-8">
-        Quiz Application
+        Compiler Design
       </h1>
 
       <div className="w-full max-w-3xl mb-8">

@@ -15,22 +15,13 @@ const Main = () => {
 
     return (
         <div className="min-h-screen bg-gray-100 flex flex-col justify-center items-center">
-            <h1 className="text-4xl font-bold text-secondary mb-4 mt-4">Quiz Application</h1>
+                <h1 className="text-4xl font-bold text-secondary mb-4 mt-4">Compiler Design</h1>
 
             <ol className="list-decimal list-inside text-lg text-black font-medium space-y-1 mb-8">
                 <li>You will be asked 30 questions one after another.</li>
                 <li>One Mark is awarded for the correct answer.</li>
                 <li>The result will be declared at the end of the quiz.</li>
             </ol>
-
-            <form id="form" className="w-full max-w-sm mb-8">
-                <input 
-                    ref={inputRef} 
-                    type="text" 
-                    placeholder='Enter your name' 
-                    className="w-full px-3 py-2 bg-gray-100 border border-secondary rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-secondary focus:border-secondary"
-                />
-            </form>
 
             <form id="form" className="w-full max-w-sm mb-8">
                 <input 
