@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { attempts_Number, earnPoints_Number, flagResult } from '../helper/helper';
 import { resetAllAction } from '../redux/question_reducer';
 import { resetResultAction } from '../redux/result_reducer';
+import { usePublishResult } from '../hooks/setResult';
 
 export default function Result() {
 
@@ -20,6 +21,14 @@ export default function Result() {
     const earnPoints = earnPoints_Number(result, answers, 1)
     const flag = flagResult(totalPoints, earnPoints)
 
+     /** store user result */
+    usePublishResult({ 
+    result, 
+    username : userId,
+    attempts,
+    points: earnPoints,
+    achived : flag ? "Passed" : "Failed" });
+
     function onRestart(){ // Function to restart the quiz
         console.log('on Restart')
         dispatch(resetAllAction()); // reset the question state
@@ -33,7 +42,7 @@ export default function Result() {
             <div className='bg-white p-6 rounded-md shadow-lg border border-gray-200 w-full max-w-3xl mb-8'>
                 <div className='flex justify-between mb-4'>
                     <span className='text-lg text-tertiary'>Username</span>
-                    <span className='font-bold text-lg text-gray-800'>Abdus Samad</span>
+                    <span className='font-bold text-lg text-gray-800'>{userId || ""}</span>
                 </div>
                 <div className='flex justify-between mb-4'>
                     <span className='text-lg text-tertiary'>Total Marks:</span>

@@ -1,21 +1,16 @@
-import React, { useEffect } from 'react'
-import { attempts_Number, earnPoints_Number, flagResult } from '../helper/helper';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useEffect, useState } from 'react'
+import { getServerData } from '../helper/helper'
 
 
 export default function ResultTable() {
 
-    const dispatch = useDispatch();
-    const { questions : { queue ,answers}, result : { result, userId}}  = useSelector(state => state)
+    const [data, setData] = useState([])
 
     useEffect(() => {
-        console.log(flag)
+        getServerData("https://mern-quiz-lords-backend.onrender.com/api/result", (res) => {
+            setData(res)
+        })
     })
-    
-    const totalPoints = queue.length * 1; 
-    const attempts = attempts_Number(result);
-    const earnPoints = earnPoints_Number(result, answers, 1)
-    const flag = flagResult(totalPoints, earnPoints)
 
     return (
         <div className='overflow-x-auto'>
@@ -29,11 +24,17 @@ export default function ResultTable() {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr className='border-b text-center'>
-                        <td className='px-4 py-2'>Abdus Samad</td>
-                        <td className='px-4 py-2'>{attempts || 0}</td>
-                        <td className='px-4 py-2'>{earnPoints || 0}</td><td className={`px-4 py-2 ${flag ? 'text-green-500' : 'text-red-500 '}`}>{flag ? "Passed" : "Failed"}</td>
-                    </tr>
+                { !data ?? <div>No Data Found </div>}
+                {
+                    data.map((v, i) => (
+                        <tr className='table-body border-b text-center' key={i}>
+                            <td>{v?.username || ''}</td>
+                            <td>{v?.attempts || 0}</td>
+                            <td>{v?.points || 0}</td>
+                            <td>{v?.achived || ""}</td>
+                        </tr>
+                    ))
+                }
                 </tbody>
             </table>
         </div>
