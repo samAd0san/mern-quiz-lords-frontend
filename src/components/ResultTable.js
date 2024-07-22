@@ -14,7 +14,7 @@ export default function ResultTable() {
 
     return (
         <div className='overflow-x-auto'>
-            <table className='min-w-full bg-white border border-gray-300'>
+            <table className='min-w-full bg-white border border-gray-300 mt-20 mb-20'>
                 <thead className='bg-secondary text-white'>
                     <tr>
                         <th className='px-4 py-2'>Name</th>

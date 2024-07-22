@@ -71,10 +71,10 @@ export default function Result() {
                 <Link to={'/'} onClick={onRestart} className='btn bg-secondary text-white font-bold py-2 px-4 rounded-md hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-secondary'>Restart</Link>
             </div>
 
-            {/* Displaying the Result Table */}
+            {/* Displaying the Result Table
             <div className='w-full max-w-4xl'>
                 <ResultTable />
-            </div>
+            </div> */}
         </div>
     )
 }

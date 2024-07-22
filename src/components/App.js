@@ -9,6 +9,7 @@ import Result from './Result';
 import { CheckUserExist } from '../helper/helper';
 import Header from './Header';
 import Footer from './Footer';
+import ResultTable from './ResultTable';
 
 /* Define Routes */
 const router = createBrowserRouter([
@@ -23,6 +24,10 @@ const router = createBrowserRouter([
   {
     path: '/result',
     element: <CheckUserExist><Result /></CheckUserExist>
+  },
+  {
+    path: '/faculty',
+    element: <ResultTable />
   },
 ])
 
