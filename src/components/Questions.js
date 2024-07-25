@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import { useFetchQuestion } from "../hooks/FetchQuestions";
 import { useSelector } from "react-redux";
-import Loader from "./Loader";
-import Error from "./Error"
+import Loader from "../utils/Loader";
+import Error from "../utils/Error"
 
 export default function Questions({ onChecked, selectedAnswer }) {
   const { trace } = useSelector((state) => state.questions);
@@ -25,6 +25,7 @@ export default function Questions({ onChecked, selectedAnswer }) {
   if(isLoading) return <h3 className='text-light'><Loader /></h3>
   if(serverError) return <h3 className='text-light'><Error/></h3>
 
+  // Display the question and options 
   return (
     <div className="p-6 bg-white rounded-md shadow-md">
       <h2 className="text-2xl font-bold text-secondary mb-4">

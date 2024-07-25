@@ -2,12 +2,12 @@ import React, { useEffect, useState } from "react";
 import Questions from "./Questions";
 import { useDispatch, useSelector } from "react-redux";
 import { MoveNextQuestion, MovePrevQuestion } from "../hooks/FetchQuestions";
-import { PushAnswer } from "../hooks/setResult";
+import { PushAnswer, updateResult } from "../hooks/setResult"; // Import updateResult
 import { Navigate } from "react-router-dom";
 
 // This component displays the quiz application
 export default function Quiz() {
-  const [selectedAnswers, setSelectedAnswers] = useState({});
+  const [selectedAnswers, setSelectedAnswers] = useState([]); // State to store the selected answers
 
   // Gets the state from the store
   const result = useSelector((state) => state.result.result);
@@ -15,14 +15,18 @@ export default function Quiz() {
   const dispatch = useDispatch(); // Get the dispatch function to send actions to the Redux store
 
   useEffect(() => {
-    console.log(result);
+    console.log(trace, selectedAnswers, result);
   });
 
   function onNext() {
     if (trace < queue.length) {
       dispatch(MoveNextQuestion());
-      if (result.length <= trace) {
-        dispatch(PushAnswer(selectedAnswers[trace]));
+
+      // Update the result with the selected answer
+      if (selectedAnswers[trace] !== undefined) {
+        dispatch(updateResult({ trace, checked: selectedAnswers[trace] }));
+      } else if (result.length <= trace) {
+        dispatch(PushAnswer(selectedAnswers));
       }
     }
   }
@@ -30,6 +34,11 @@ export default function Quiz() {
   function onPrev() {
     if (trace > 0) {
       dispatch(MovePrevQuestion());
+      
+      // Update the result with the selected answer
+      if (selectedAnswers[trace] !== undefined) {
+        dispatch(updateResult({ trace, checked: selectedAnswers[trace] }));
+      }
     }
   }
 
@@ -38,6 +47,9 @@ export default function Quiz() {
       ...selectedAnswers,
       [trace]: answer,
     });
+
+    // Update the result immediately when the answer changes
+    dispatch(updateResult({ trace, checked: answer }));
   }
 
   if (result.length && result.length >= queue.length) {

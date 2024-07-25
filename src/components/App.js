@@ -29,7 +29,7 @@ const router = createBrowserRouter([
     path: '/faculty',
     element: <ResultTable />
   },
-])
+]);
 
 function App() {
   return (
