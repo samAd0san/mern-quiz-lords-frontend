@@ -7,7 +7,7 @@ import { Navigate } from "react-router-dom";
 
 // This component displays the quiz application
 export default function Quiz() {
-  const [selectedAnswers, setSelectedAnswers] = useState([]); // State to store the selected answers
+  const [selectedAnswers, setSelectedAnswers] = useState({}); // State to store the selected answers
 
   // Gets the state from the store
   const result = useSelector((state) => state.result.result);
@@ -21,22 +21,29 @@ export default function Quiz() {
   function onNext() {
     if (trace < queue.length) {
       dispatch(MoveNextQuestion());
-
+  
       // Update the result with the selected answer
       if (selectedAnswers[trace] !== undefined) {
         dispatch(updateResult({ trace, checked: selectedAnswers[trace] }));
-      } else if (result.length <= trace) {
-        dispatch(PushAnswer(selectedAnswers));
+      } else {
+        // Set the result to undefined if no answer is selected
+        dispatch(updateResult({ trace, checked: undefined }));
       }
+    } else if (result.length <= trace) {
+      // Create a result array that includes undefined for unselected answers
+      const updatedAnswers = queue.map((_, index) => selectedAnswers[index] !== undefined ? selectedAnswers[index] : undefined);
+      dispatch(PushAnswer(updatedAnswers));
     }
-  }
+  }  
 
+  // handles updating the result when clicking the next button and then moving to the previous question
   function onPrev() {
     if (trace > 0) {
       dispatch(MovePrevQuestion());
-      
+
       // Update the result with the selected answer
       if (selectedAnswers[trace] !== undefined) {
+        // Update the result in the Redux store with the selected answer for the current question.
         dispatch(updateResult({ trace, checked: selectedAnswers[trace] }));
       }
     }
@@ -48,8 +55,8 @@ export default function Quiz() {
       [trace]: answer,
     });
 
-    // Update the result immediately when the answer changes
-    dispatch(updateResult({ trace, checked: answer }));
+    // Update the result immediately when the answer changes (or) Dispatch is done immediately when the answer changes.
+    dispatch(updateResult({ trace, checked: answer })); 
   }
 
   if (result.length && result.length >= queue.length) {
