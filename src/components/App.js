@@ -16,6 +16,7 @@ import Login from '../user/Login';
 import Contact from '../utils/Contact';
 import Profile from '../user/Profile';
 import UserContext from "../context/UserContext";
+import About from './About'
 
 const Layout = () => {
   return (
@@ -25,6 +26,7 @@ const Layout = () => {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/main" element={<Main />} />
+          <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/signin" element={<Login />} />

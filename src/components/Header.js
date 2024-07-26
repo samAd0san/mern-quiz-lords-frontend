@@ -28,19 +28,7 @@ const Header = () => {
           <nav>
             <ul className="flex space-x-6 text-white font-bold">
               <li className="relative group">
-                <a href="https://www.lords.ac.in/about-us/overview/" target="_blank" className="hover:underline">About Us</a>
-                <ul className="absolute hidden group-hover:block bg-white text-black mt-1"></ul>
-              </li>
-              <li className="relative group">
-                <a href="https://www.lords.ac.in/domestic/courses-offered/" target="_blank" className="hover:underline">Admissions</a>
-                <ul className="absolute hidden group-hover:block bg-white text-black mt-1"></ul>
-              </li>
-              <li className="relative group">
-                <a href="https://www.lords.ac.in/computer-science-and-engineering/" target="_blank" className="hover:underline">Departments</a>
-                <ul className="absolute hidden group-hover:block bg-white text-black mt-1"></ul>
-              </li>
-              <li className="relative group">
-                <a href="https://www.lords.ac.in/campus-life/events/" target="_blank" className="hover:underline">Infrastructure</a>
+                <Link to = '/about' className="hover:underline">About Us</Link>
                 <ul className="absolute hidden group-hover:block bg-white text-black mt-1"></ul>
               </li>
               <li className="relative group">
@@ -56,9 +44,11 @@ const Header = () => {
                   <button onClick={onLogoutButton} className="border px-2 rounded">Logout</button>
                 </li>
               </ShouldRender>
+              <ShouldRender when={isLoggedin}>
               <li className=' text-2xl'>
                 <Link to = '/profile' className="hover:underline"><FaUserCircle /></Link>
               </li>
+              </ShouldRender>
             </ul>
           </nav>
         </div>
