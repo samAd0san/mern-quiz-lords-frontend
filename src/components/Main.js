@@ -15,7 +15,7 @@ const Main = () => {
 
     return (
         <div className="min-h-screen bg-gray-100 flex flex-col justify-center items-center">
-                <h1 className="text-4xl font-bold text-secondary mb-4 mt-4">Compiler Design</h1>
+                <h1 className="text-4xl font-bold text-primary mb-4 mt-4">Compiler Design</h1>
 
             <ol className="list-decimal list-inside text-lg text-black font-medium space-y-1 mb-8">
                 <li>You will be asked 30 questions one after another.</li>
@@ -34,7 +34,7 @@ const Main = () => {
 
             <div>
                 <Link 
-                    className='btn inline-block px-6 py-3 bg-secondary text-white font-bold rounded-md hover:bg-blue-400 focus:outline-none focus:ring-2 focus:ring-secondary focus:ring-opacity-50'
+                    className='btn inline-block px-6 py-3 bg-primary text-white font-bold rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-secondary focus:ring-opacity-50 transition-all duration-300'
                     to={'/quiz'}
                     onClick={startQuiz}
                 >

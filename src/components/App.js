@@ -3,6 +3,7 @@ import '../styles/App.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 /* Import Components */
+import Home from './Home'; // Import Home component
 import Main from './Main';
 import Quiz from './Quiz';
 import Result from './Result';
@@ -15,7 +16,11 @@ import ResultTable from './ResultTable';
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Main />
+    element: <Home /> // Set Home component as root
+  },
+  {
+    path: '/main',
+    element: <Main /> // Update path to '/main' for Main component
   },
   {
     path: '/quiz',
