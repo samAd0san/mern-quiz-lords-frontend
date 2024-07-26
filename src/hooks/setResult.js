@@ -18,7 +18,7 @@ export const updateResult = (index) => async(dispatch) => {
     }
 }
 
-/** insert user data */
+// Insert the result into the database
 export const usePublishResult = (resultData) => {
     const { result, username } = resultData;
     (async () => {

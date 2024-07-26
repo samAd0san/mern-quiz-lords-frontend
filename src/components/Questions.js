@@ -34,13 +34,14 @@ export default function Questions({ onChecked, selectedAnswer }) {
 
       <ul key={questions?.id} className="space-y-4">
         {questions?.options.map((q, i) => (
+          // These are the options in list format.
           <li key={i} className="flex items-center">
             <input
               type="radio"
               value={q}
               name={`options-${questions?.id}`}
               id={`q${i}-option`}
-              onChange={() => onSelect(i)}
+              onChange={() => onSelect(i)}  // triggers the handleAnswerChange function in Quiz.js.
               checked={selectedAnswer === i}
               className="mr-2"
             />
