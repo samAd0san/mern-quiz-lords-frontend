@@ -10,12 +10,22 @@ import { CheckUserExist } from '../helper/helper';
 import Header from './Header';
 import Footer from './Footer';
 import ResultTable from './ResultTable';
+import Signup from '../user/Signup';
+import Login from '../user/Login';
 
 /* Define Routes */
 const router = createBrowserRouter([
   {
     path: '/',
     element: <Main />
+  },
+  {
+    path: '/signup',
+    element: <Signup />
+  },
+  {
+    path: '/signin',
+    element: <Login />
   },
   {
     path: '/quiz',
