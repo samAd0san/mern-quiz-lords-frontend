@@ -83,7 +83,7 @@ function Signup() {
 
   return (
     <div className="flex items-center justify-center mt-8 mb-8 bg-white rounded">
-      <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md w-[330px]">
+      <div className="bg-white p-8 rounded-xl shadow-xl w-full max-w-md w-1/4 border border-secondary">
         <ShouldRender when={submitError}>
           <Error msg={submitErrorMessage} />
         </ShouldRender>
@@ -95,7 +95,7 @@ function Signup() {
 
         <form onSubmit={onSignup}>
           <div className="mb-4">
-            <label className="block mb-1 font-semibold">First Name</label>
+            <label className="block mb-1 font-semibold text-primary">First Name</label>
             <input
               name="firstName"
               type="text"
@@ -112,7 +112,7 @@ function Signup() {
           </div>
 
           <div className="mb-4">
-            <label className="block mb-1 font-semibold">Last Name</label>
+            <label className="block mb-1 font-semibold text-primary">Last Name</label>
             <input
               name="lastName"
               type="text"
@@ -127,7 +127,7 @@ function Signup() {
           </div>
 
           <div className="mb-4">
-            <label className="block mb-1 font-semibold">Roll Number</label>
+            <label className="block mb-1 font-semibold text-primary">Roll Number</label>
             <input
               name="rollNo"
               type="number"
@@ -142,7 +142,7 @@ function Signup() {
           </div>
 
           <div className="mb-4">
-            <label className="block mb-1 font-semibold">Branch</label>
+            <label className="block mb-1 font-semibold text-primary">Branch</label>
             <input
               name="Branch"
               type="text"
@@ -157,7 +157,7 @@ function Signup() {
           </div>
 
           <div className="mb-4">
-            <label className="block mb-1 font-semibold">Section</label>
+            <label className="block mb-1 font-semibold text-primary">Section</label>
             <input
               name="Section"
               type="text"
@@ -172,7 +172,7 @@ function Signup() {
           </div>
 
           <div className="mb-4">
-            <label className="block mb-1 font-semibold">Email</label>
+            <label className="block mb-1 font-semibold text-primary">Email</label>
             <input
               name="email"
               type="email"
@@ -187,7 +187,7 @@ function Signup() {
           </div>
 
           <div className="mb-8">
-            <label className="block mb-1 font-semibold">Password</label>
+            <label className="block mb-1 font-semibold text-primary">Password</label>
             <input
               name="password"
               type="password"
