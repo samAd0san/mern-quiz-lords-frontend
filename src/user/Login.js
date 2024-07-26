@@ -36,12 +36,12 @@ function Login() {
     <div className="flex items-center justify-center mt-8 mb-8 bg-white rounded">
       <form
         onSubmit={onLogin}
-        className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md"
+        className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md w-[350px]"
       >
         <ShouldRender when={error}>
           <Error msg="Invalid Username or Password" />
         </ShouldRender>
-        <h1 className="font-bold text-2xl mb-8 text-center">
+        <h1 className="font-bold text-2xl mb-8 text-primary text-center">
           Sign In to Your Account
         </h1>
 
@@ -54,19 +54,19 @@ function Login() {
             type="email"
             value={user.email}
             onChange={onInputChange}
-            className="block border border-gray-300 w-full rounded p-2"
+            className="block border border-gray-300 w-full rounded-lg p-2"
             required
           />
         </div>
 
-        <div className="mb-4">
+        <div className="mb-8">
           <label className="block mb-1 font-semibold">Password</label>
           <input
             name="password"
             type="password"
             value={user.password}
             onChange={onInputChange}
-            className="block border border-gray-300 w-full rounded p-2"
+            className="block border border-gray-300 w-full rounded-lg p-2"
             required
           />
         </div>
@@ -74,7 +74,7 @@ function Login() {
         <div className="mb-4">
           <button
             type="submit"
-            className="w-full bg-primary hover:bg-secondary text-white py-2 rounded focus:outline-none"
+            className="w-full bg-primary hover:bg-secondary text-white py-2 rounded-lg focus:outline-none"
           >
             Sign In
           </button>

@@ -83,11 +83,11 @@ function Signup() {
 
   return (
     <div className="flex items-center justify-center mt-8 mb-8 bg-white rounded">
-      <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md w-[390px]">
+      <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md w-[350px]">
         <ShouldRender when={submitError}>
           <Error msg={submitErrorMessage} />
         </ShouldRender>
-        <h1 className="font-bold text-2xl mb-8 text-center">
+        <h1 className="font-bold text-2xl mb-8 text-primary text-center">
           Create Your Account
         </h1>
 
@@ -101,7 +101,7 @@ function Signup() {
               type="text"
               value={user.firstName}
               onChange={onInputChange}
-              className="block border border-gray-300 w-full rounded p-2"
+              className="block border border-gray-300 w-full rounded-lg p-2"
               required
             />
             <ShouldRender when={errors.firstName}>
@@ -118,7 +118,7 @@ function Signup() {
               type="text"
               value={user.lastName}
               onChange={onInputChange}
-              className="block border border-gray-300 w-full rounded p-2"
+              className="block border border-gray-300 w-full rounded-lg p-2"
               required
             />
             <ShouldRender when={errors.lastName}>
@@ -130,10 +130,10 @@ function Signup() {
             <label className="block mb-1 font-semibold">Roll Number</label>
             <input
               name="rollNo"
-              type="text"
+              type="number"
               value={user.rollNo}
               onChange={onInputChange}
-              className="block border border-gray-300 w-full rounded p-2"
+              className="block border border-gray-300 w-full rounded-lg p-2"
               required
             />
             <ShouldRender when={errors.rollNo}>
@@ -148,7 +148,7 @@ function Signup() {
               type="text"
               value={user.Branch}
               onChange={onInputChange}
-              className="block border border-gray-300 w-full rounded p-2"
+              className="block border border-gray-300 w-full rounded-lg p-2"
               required
             />
             <ShouldRender when={errors.Branch}>
@@ -163,7 +163,7 @@ function Signup() {
               type="text"
               value={user.Section}
               onChange={onInputChange}
-              className="block border border-gray-300 w-full rounded p-2"
+              className="block border border-gray-300 w-full rounded-lg p-2"
               required
             />
             <ShouldRender when={errors.Section}>
@@ -178,7 +178,7 @@ function Signup() {
               type="email"
               value={user.email}
               onChange={onInputChange}
-              className="block border border-gray-300 w-full rounded p-2"
+              className="block border border-gray-300 w-full rounded-lg p-2"
               required
             />
             <ShouldRender when={errors.email}>
@@ -186,14 +186,14 @@ function Signup() {
             </ShouldRender>
           </div>
 
-          <div className="mb-4">
+          <div className="mb-8">
             <label className="block mb-1 font-semibold">Password</label>
             <input
               name="password"
               type="password"
               value={user.password}
               onChange={onInputChange}
-              className="block border border-gray-300 w-full rounded p-2"
+              className="block border border-gray-300 w-full rounded-lg p-2"
               required
             />
             <ShouldRender when={errors.password}>
@@ -204,7 +204,7 @@ function Signup() {
           <div className="mb-4">
             <button
               type="submit"
-              className="w-full bg-primary hover:bg-secondary text-white py-2 rounded focus:outline-none"
+              className="w-full bg-primary hover:bg-secondary text-white py-2 rounded-lg focus:outline-none"
               disabled={!isFormValid()}
             >
               Sign Up
