@@ -1,6 +1,6 @@
 import React from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import '../styles/App.css';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 /* Import Components */
 import Home from './Home'; // Import Home component
@@ -13,47 +13,33 @@ import Footer from './Footer';
 import ResultTable from './ResultTable';
 import Signup from '../user/Signup';
 import Login from '../user/Login';
+import Contact from '../utils/Contact';
 
-/* Define Routes */
-const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <Home /> // Set Home component as root
-  },
-  {
-    path: '/main',
-    element: <Main /> // Update path to '/main' for Main component
-  },
-  {
-    path: '/signup',
-    element: <Signup />
-  },
-  {
-    path: '/signin',
-    element: <Login />
-  },
-  {
-    path: '/quiz',
-    element: <CheckUserExist><Quiz /></CheckUserExist>
-  },
-  {
-    path: '/result',
-    element: <CheckUserExist><Result /></CheckUserExist>
-  },
-  {
-    path: '/faculty',
-    element: <ResultTable />
-  },
-]);
-
-function App() {
+const Layout = () => {
   return (
     <div>
       <Header />
-      <RouterProvider router={router} />
+      <div>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/main" element={<Main />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/signin" element={<Login />} />
+          <Route path="/quiz" element={<CheckUserExist><Quiz /></CheckUserExist>} />
+          <Route path="/result" element={<CheckUserExist><Result /></CheckUserExist>} />
+          <Route path="/faculty" element={<ResultTable />} />
+        </Routes>
+      </div>
       <Footer />
     </div>
   );
-}
+};
 
-export default App;
+export default function App() {
+  return (
+    <BrowserRouter>
+      <Layout />
+    </BrowserRouter>
+  );
+}

@@ -32,13 +32,13 @@ const Header = () => {
                 <ul className="absolute hidden group-hover:block bg-white text-black mt-1"></ul>
               </li>
               <li className="relative group">
-                <a href="https://www.lords.ac.in/contact-us/" target="_blank" className="hover:underline">Contact Us</a>
+                <Link to = '/contact' className="hover:underline">Contact Us</Link>
               </li>
               <li className="relative group">
-                <a href = '/signup' className="hover:underline">Signup</a>
+                <Link to = '/signup' className="hover:underline">Signup</Link>
               </li>
               <li className="relative group">
-                <a href = '/signin' className="hover:underline">Login</a>
+                <Link to = '/signin' className="hover:underline">Login</Link>
               </li>
             </ul>
           </nav>
