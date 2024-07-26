@@ -2,18 +2,32 @@ import React from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import { FaUserCircle } from 'react-icons/fa';
 import ShouldRender from "../utils/ShouldRender";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import UserContext from "../context/UserContext";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Header = () => {
   const { isLoggedin, setLoggedin } = useContext(UserContext);
   const navigate = useNavigate();
 
-    const onLogoutButton = () => {
-        localStorage.removeItem('token');
-        navigate('/signin');
-        setLoggedin(false);
-    };
+  const onLogoutButton = () => {
+      localStorage.removeItem('token');
+      navigate('/signin');
+      setLoggedin(false);
+  };
+
+  useEffect(() => {
+    const currentPath = window.location.pathname;
+    if (
+      !isLoggedin &&
+      (currentPath === "/" || currentPath === "/faculty")
+    ) {
+      navigate("/signin");
+      toast.error("Please sign in to continue!");
+    }
+  }, [isLoggedin, navigate]);
+
   return (
     <div className="flex items-center">
       <div style={{ border: '12px solid white', height: '80px', display: 'flex', alignItems: 'center', marginRight: '16px',marginLeft: '16px' }}>
