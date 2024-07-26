@@ -14,6 +14,7 @@ import ResultTable from './ResultTable';
 import Signup from '../user/Signup';
 import Login from '../user/Login';
 import Contact from '../utils/Contact';
+import Profile from '../user/Profile';
 
 const Layout = () => {
   return (
@@ -26,6 +27,7 @@ const Layout = () => {
           <Route path="/contact" element={<Contact />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/signin" element={<Login />} />
+          <Route path="/profile" element={<Profile />} />
           <Route path="/quiz" element={<CheckUserExist><Quiz /></CheckUserExist>} />
           <Route path="/result" element={<CheckUserExist><Result /></CheckUserExist>} />
           <Route path="/faculty" element={<ResultTable />} />

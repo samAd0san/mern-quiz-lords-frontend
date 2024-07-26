@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { FaUserCircle } from 'react-icons/fa';
 
 const Header = () => {
   return (
@@ -39,6 +40,9 @@ const Header = () => {
               </li>
               <li className="relative group">
                 <Link to = '/signin' className="hover:underline">Login</Link>
+              </li>
+              <li className=' text-2xl'>
+                <Link to = '/profile' className="hover:underline"><FaUserCircle /></Link>
               </li>
             </ul>
           </nav>
