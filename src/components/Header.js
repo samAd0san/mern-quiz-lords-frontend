@@ -21,7 +21,7 @@ const Header = () => {
     const currentPath = window.location.pathname;
     if (
       !isLoggedin &&
-      (currentPath === "/" || currentPath === "/faculty")
+      (currentPath === "/")
     ) {
       navigate("/signin");
       toast.error("Please sign in to continue!");
