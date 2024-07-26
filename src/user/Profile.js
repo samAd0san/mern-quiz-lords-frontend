@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import ResultTable from '../components/Result';
 
 const Profile = () => {
   const [profile, setProfile] = useState({ 
@@ -118,12 +119,9 @@ const Profile = () => {
         </div>
       </div>
 
-      {/* Main Content */}
-      <div className="w-2/3 bg-white p-6">
-        <h2 className="text-xl font-semibold mb-6">Main Content</h2>
-        <p className="text-gray-700">
-          This is the main content area. You can place any content here, such as user posts, articles, or additional details.
-        </p>
+      {/* Add the ResultTable component here */}
+      <div className="w-2/3 bg-white">
+        <ResultTable />
       </div>
     </div>
   );
