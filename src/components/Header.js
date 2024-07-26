@@ -1,13 +1,18 @@
 import React from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import { FaUserCircle } from 'react-icons/fa';
+import ShouldRender from "../utils/ShouldRender";
+import { useContext } from "react";
+import UserContext from "../context/UserContext";
 
 const Header = () => {
+  const { isLoggedin, setLoggedin } = useContext(UserContext);
   const navigate = useNavigate();
 
     const onLogoutButton = () => {
         localStorage.removeItem('token');
-        navigate('/signin')
+        navigate('/signin');
+        setLoggedin(false);
     };
   return (
     <div className="flex items-center">
@@ -41,12 +46,16 @@ const Header = () => {
               <li className="relative group">
                 <Link to = '/contact' className="hover:underline">Contact Us</Link>
               </li>
+              <ShouldRender when={!isLoggedin}>
               <li className="relative group">
-                <Link to = '/signin' className="hover:underline">Login</Link>
+                <Link to = '/signin' className="border p-1 px-3 rounded">Login</Link>
               </li>
-              <li className="relative group">
-                <button onClick={onLogoutButton} className="border px-1 rounded">Logout</button>
-              </li>
+              </ShouldRender>
+              <ShouldRender when={isLoggedin}>
+                <li className="relative group">
+                  <button onClick={onLogoutButton} className="border px-2 rounded">Logout</button>
+                </li>
+              </ShouldRender>
               <li className=' text-2xl'>
                 <Link to = '/profile' className="hover:underline"><FaUserCircle /></Link>
               </li>

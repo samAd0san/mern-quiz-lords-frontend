@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from "react";
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import '../styles/App.css';
 
@@ -15,6 +15,7 @@ import Signup from '../user/Signup';
 import Login from '../user/Login';
 import Contact from '../utils/Contact';
 import Profile from '../user/Profile';
+import UserContext from "../context/UserContext";
 
 const Layout = () => {
   return (
@@ -39,9 +40,12 @@ const Layout = () => {
 };
 
 export default function App() {
+  const [isLoggedin, setLoggedin] = useState(false);
   return (
     <BrowserRouter>
-      <Layout />
+      <UserContext.Provider value={{ isLoggedin, setLoggedin }}>
+        <Layout />
+      </UserContext.Provider>
     </BrowserRouter>
   );
 }

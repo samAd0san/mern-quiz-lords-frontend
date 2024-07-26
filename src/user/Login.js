@@ -1,16 +1,18 @@
 import axios from "axios";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import Error from "../utils/Error";
 import ShouldRender from "../utils/ShouldRender";
 import { Link } from "react-router-dom";
 import Loader from "../utils/Loader";
+import UserContext from "../context/UserContext";
 
 function Login() {
   const [user, setUser] = useState({ email: "", password: "" });
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { setLoggedin } = useContext(UserContext)
 
   const onInputChange = (evt) => {
     const newUser = { ...user, [evt.target.name]: evt.target.value };
@@ -25,6 +27,7 @@ function Login() {
       const res = await axios.post(url, user);
       localStorage.setItem("token", res.data.token);
       navigate("/");
+      setLoggedin(true);
     } catch (error) {
       setError(true);
     } finally {
