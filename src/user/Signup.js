@@ -83,7 +83,7 @@ function Signup() {
 
   return (
     <div className="flex items-center justify-center mt-8 mb-8 bg-white rounded">
-      <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md w-[350px]">
+      <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md w-[330px]">
         <ShouldRender when={submitError}>
           <Error msg={submitErrorMessage} />
         </ShouldRender>

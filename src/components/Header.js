@@ -1,8 +1,14 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from "react-router-dom";
 import { FaUserCircle } from 'react-icons/fa';
 
 const Header = () => {
+  const navigate = useNavigate();
+
+    const onLogoutButton = () => {
+        localStorage.removeItem('token');
+        navigate('/signin')
+    };
   return (
     <div className="flex items-center">
       <div style={{ border: '12px solid white', height: '80px', display: 'flex', alignItems: 'center', marginRight: '16px',marginLeft: '16px' }}>
@@ -36,10 +42,10 @@ const Header = () => {
                 <Link to = '/contact' className="hover:underline">Contact Us</Link>
               </li>
               <li className="relative group">
-                <Link to = '/signup' className="hover:underline">Signup</Link>
+                <Link to = '/signin' className="hover:underline">Login</Link>
               </li>
               <li className="relative group">
-                <Link to = '/signin' className="hover:underline">Login</Link>
+                <button onClick={onLogoutButton} className="border px-1 rounded">Logout</button>
               </li>
               <li className=' text-2xl'>
                 <Link to = '/profile' className="hover:underline"><FaUserCircle /></Link>

@@ -36,7 +36,7 @@ function Login() {
     <div className="flex items-center justify-center mt-8 mb-8 bg-white rounded">
       <form
         onSubmit={onLogin}
-        className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md w-[350px]"
+        className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md w-[320px]"
       >
         <ShouldRender when={error}>
           <Error msg="Invalid Username or Password" />
