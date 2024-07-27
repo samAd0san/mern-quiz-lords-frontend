@@ -8,7 +8,7 @@ export default function ResultTable() {
     const [expandedRows, setExpandedRows] = useState(new Set());
 
     useEffect(() => {
-        getServerData("https://mern-quiz-lords-backend.onrender.com/api/result", (res) => {
+        getServerData("http://localhost:5000/api/result", (res) => {
             setData(res);
         });
     }, []);
