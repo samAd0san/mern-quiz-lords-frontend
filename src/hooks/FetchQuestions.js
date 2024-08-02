@@ -24,7 +24,7 @@ export const useFetchQuestion = () => {
         /** Async function to fetch question data from a simulated backend */
         (async () => {
             try {
-                const [{ questions, answers }] = await getServerData("http://localhost:5000/api/questions", (data) => data);
+                const [{ questions, answers }] = await getServerData(`${process.env.REACT_APP_BACKEND_URI}/api/questions`, (data) => data);
 
                 if (questions.length > 0) {
                     // If data is available, update the state with the data and stop loading

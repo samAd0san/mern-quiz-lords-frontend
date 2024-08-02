@@ -23,7 +23,7 @@ function Login() {
     setLoading(true);
     setError(false);
     try {
-      const url = "http://localhost:5000/users/signin";
+      const url = `${process.env.REACT_APP_BACKEND_URI}/users/signin`;
       const res = await axios.post(url, user);
       localStorage.setItem("token", res.data.token);
       navigate("/");

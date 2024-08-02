@@ -63,7 +63,7 @@ function Signup() {
     setLoading(true);
     setSubmitError(false);
     try {
-      const url = "http://localhost:5000/users/signup";
+      const url = `${process.env.REACT_APP_BACKEND_URI}/users/signup`;
       await axios.post(url, user);
       navigate("/signin");
     } catch (error) {

@@ -25,7 +25,7 @@ const Profile = () => {
         const decodedPayload = atob(tokenPayload); // Decode base64-encoded payload
         const { email } = JSON.parse(decodedPayload); // Parse JSON from decoded payload
 
-        const response = await axios.get(`http://localhost:5000/users/profile/${email}`, {
+        const response = await axios.get(`${process.env.REACT_APP_BACKEND_URI}/users/profile/${email}`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
