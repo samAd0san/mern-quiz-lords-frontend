@@ -106,24 +106,26 @@ export default function Quiz() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col justify-center items-center">
-      <h1 className="text-4xl font-bold text-primary mb-8">Compiler Design</h1>
+    <div className="min-h-screen bg-gray-100 flex flex-col justify-center items-center p-4 md:p-6">
+      <h1 className="text-3xl md:text-4xl font-bold text-primary mb-6 md:mb-8 text-center">
+        Compiler Design
+      </h1>
       {quizStarted && (
         <div className="mb-4">
-          <h2>Time left: {formatTime(timer)}</h2>
+          <h2 className="text-lg md:text-xl">Time left: {formatTime(timer)}</h2>
         </div>
       )}
-      <div className="w-full max-w-3xl mb-8">
+      <div className="w-full max-w-md md:max-w-3xl mb-6 md:mb-8">
         <Questions
           onChecked={handleAnswerChange}
           selectedAnswer={selectedAnswers[trace]}
         />
       </div>
 
-      <div className="flex justify-between w-full max-w-3xl">
+      <div className="flex justify-between w-full max-w-md md:max-w-3xl">
         {trace > 0 ? (
           <button
-            className="ml-2 btn bg-primary transition-all duration-300 text-white font-bold py-2 px-4 rounded-md hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-secondary"
+            className="btn bg-primary transition-all duration-300 text-white font-bold py-2 px-4 rounded-md hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-secondary"
             onClick={onPrev}
           >
             Prev
@@ -132,7 +134,7 @@ export default function Quiz() {
           <div></div>
         )}
         <button
-          className="mr-2 btn bg-primary transition-all duration-300 text-white font-bold py-2 px-4 rounded-md hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-secondary"
+          className="btn bg-primary transition-all duration-300 text-white font-bold py-2 px-4 rounded-md hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-secondary"
           onClick={onNext}
         >
           Next

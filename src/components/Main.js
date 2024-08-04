@@ -51,18 +51,18 @@ const Main = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col justify-center items-center">
-      <h1 className="text-4xl font-bold text-primary mb-4 mt-4">
+    <div className="min-h-screen bg-gray-100 flex flex-col justify-center items-center p-4">
+      <h1 className="text-4xl font-bold text-primary mb-4 mt-4 text-center">
         Compiler Design
       </h1>
 
-      <ol className="list-decimal list-inside text-lg text-black font-medium space-y-1 mb-8">
+      <ol className="list-decimal list-inside text-md text-black font-medium space-y-1 mb-8 max-w-xs md:max-w-md lg:max-w-lg">
         <li>You will be asked 30 questions one after another.</li>
         <li>One Mark is awarded for the correct answer.</li>
         <li>The result will be declared at the end of the quiz.</li>
       </ol>
 
-      <form id="form" className="w-full max-w-sm mb-8">
+      <form id="form" className="w-full max-w-xs mb-8">
         <input
           ref={inputRef}
           type="text"
