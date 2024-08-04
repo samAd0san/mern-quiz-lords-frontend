@@ -30,22 +30,22 @@ const Header = () => {
 
   return (
     <div className="flex items-center">
-      <div style={{ border: '12px solid white', height: '80px', display: 'flex', alignItems: 'center', marginRight: '16px',marginLeft: '16px' }}>
+      <div className="border-8 border-white h-20 flex items-center mx-4 sm:w-auto w-full">
         <img 
           src="https://www.lords.ac.in/wp-content/uploads/2023/04/Website-Logo.png" 
           alt="Lords Institute Logo" 
-          style={{ height: '80px', width: '220px' }}
+          className="h-20 w-full sm:w-56 object-contain"
         />
       </div>
       <header className="bg-secondary h-24" style={{ flexGrow: 1, marginLeft: '12px' }}>
         <div className="container flex items-center justify-end mt-6 px-16 py-2">
           <nav>
             <ul className="flex space-x-6 text-white font-bold">
-              <li className="relative group">
+              <li className="relative group hidden sm:block">
                 <Link to = '/about' className="hover:underline">About Us</Link>
                 <ul className="absolute hidden group-hover:block bg-white text-black mt-1"></ul>
               </li>
-              <li className="relative group">
+              <li className="relative group hidden sm:block">
                 <Link to = '/contact' className="hover:underline">Contact Us</Link>
               </li>
               <ShouldRender when={!isLoggedin}>

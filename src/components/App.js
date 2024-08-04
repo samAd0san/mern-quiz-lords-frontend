@@ -21,9 +21,9 @@ import { ToastContainer } from "react-toastify";
 
 const Layout = () => {
   return (
-    <div>
+    <div className="flex flex-col min-h-screen">
       <Header />
-      <div>
+      <div className="flex-grow">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/main" element={<Main />} />

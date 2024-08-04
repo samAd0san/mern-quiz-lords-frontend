@@ -51,10 +51,10 @@ const Profile = () => {
   }, []);
 
   return (
-    <div className="flex h-screen">
-      {/* Sidebar */}
-      <div className="w-1/3 bg-gray-100 p-6 shadow-lg">
-        <h2 className="text-2xl font-semibold mb-6 text-primary mt-12">Profile Information</h2>
+    <div className="flex flex-col md:flex-row h-screen overflow-auto p-6 bg-gray-100">
+      {/* Profile Information */}
+      <div className="w-full md:w-1/3 bg-gray-100 p-6 shadow-lg mb-6 md:mb-0">
+        <h2 className="text-2xl font-semibold mb-6 text-primary">Profile Information</h2>
         <div className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1 text-primary">First Name</label>
@@ -119,8 +119,8 @@ const Profile = () => {
         </div>
       </div>
 
-      {/* Add the ResultTable component here */}
-      <div className="w-2/3 bg-white">
+      {/* ResultTable Component */}
+      <div className="w-full md:w-2/3 bg-white p-6 shadow-lg rounded-lg">
         <ResultTable />
       </div>
     </div>
