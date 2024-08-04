@@ -123,7 +123,7 @@ export default function Quiz() {
       <div className="flex justify-between w-full max-w-3xl">
         {trace > 0 ? (
           <button
-            className="btn bg-primary transition-all duration-300 text-white font-bold py-2 px-4 rounded-md hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-secondary"
+            className="ml-2 btn bg-primary transition-all duration-300 text-white font-bold py-2 px-4 rounded-md hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-secondary"
             onClick={onPrev}
           >
             Prev
@@ -132,7 +132,7 @@ export default function Quiz() {
           <div></div>
         )}
         <button
-          className="btn bg-primary transition-all duration-300 text-white font-bold py-2 px-4 rounded-md hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-secondary"
+          className="mr-2 btn bg-primary transition-all duration-300 text-white font-bold py-2 px-4 rounded-md hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-secondary"
           onClick={onNext}
         >
           Next

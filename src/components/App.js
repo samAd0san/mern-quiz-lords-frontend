@@ -18,6 +18,7 @@ import Profile from '../user/Profile';
 import UserContext from "../context/UserContext";
 import About from './About'
 import { ToastContainer } from "react-toastify";
+import ScrollToTop from "../utils/ScrollToTop";
 
 const Layout = () => {
   return (
@@ -38,6 +39,7 @@ const Layout = () => {
         </Routes>
       </div>
       <Footer />
+      <ScrollToTop />
       <ToastContainer />
     </div>
   );
