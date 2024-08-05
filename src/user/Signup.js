@@ -63,7 +63,7 @@ function Signup() {
     setLoading(true);
     setSubmitError(false);
     try {
-      const url = "http://localhost:5000/users/signup";
+      const url = `${process.env.REACT_APP_BACKEND_URI}/users/signup`;
       await axios.post(url, user);
       navigate("/signin");
     } catch (error) {
@@ -83,11 +83,11 @@ function Signup() {
 
   return (
     <div className="flex items-center justify-center mt-8 mb-8 bg-white rounded">
-      <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md w-[390px]">
+      <div className="bg-white p-8 rounded-xl shadow-xl w-full max-w-md w-1/4 border border-secondary">
         <ShouldRender when={submitError}>
           <Error msg={submitErrorMessage} />
         </ShouldRender>
-        <h1 className="font-bold text-2xl mb-8 text-center">
+        <h1 className="font-bold text-2xl mb-8 text-primary text-center">
           Create Your Account
         </h1>
 
@@ -95,13 +95,13 @@ function Signup() {
 
         <form onSubmit={onSignup}>
           <div className="mb-4">
-            <label className="block mb-1 font-semibold">First Name</label>
+            <label className="block mb-1 font-semibold text-primary">First Name</label>
             <input
               name="firstName"
               type="text"
               value={user.firstName}
               onChange={onInputChange}
-              className="block border border-gray-300 w-full rounded p-2"
+              className="block border border-gray-300 w-full rounded-lg p-2"
               required
             />
             <ShouldRender when={errors.firstName}>
@@ -112,13 +112,13 @@ function Signup() {
           </div>
 
           <div className="mb-4">
-            <label className="block mb-1 font-semibold">Last Name</label>
+            <label className="block mb-1 font-semibold text-primary">Last Name</label>
             <input
               name="lastName"
               type="text"
               value={user.lastName}
               onChange={onInputChange}
-              className="block border border-gray-300 w-full rounded p-2"
+              className="block border border-gray-300 w-full rounded-lg p-2"
               required
             />
             <ShouldRender when={errors.lastName}>
@@ -127,13 +127,13 @@ function Signup() {
           </div>
 
           <div className="mb-4">
-            <label className="block mb-1 font-semibold">Roll Number</label>
+            <label className="block mb-1 font-semibold text-primary">Roll Number</label>
             <input
               name="rollNo"
-              type="text"
+              type="number"
               value={user.rollNo}
               onChange={onInputChange}
-              className="block border border-gray-300 w-full rounded p-2"
+              className="block border border-gray-300 w-full rounded-lg p-2"
               required
             />
             <ShouldRender when={errors.rollNo}>
@@ -142,13 +142,13 @@ function Signup() {
           </div>
 
           <div className="mb-4">
-            <label className="block mb-1 font-semibold">Branch</label>
+            <label className="block mb-1 font-semibold text-primary">Branch</label>
             <input
               name="Branch"
               type="text"
               value={user.Branch}
               onChange={onInputChange}
-              className="block border border-gray-300 w-full rounded p-2"
+              className="block border border-gray-300 w-full rounded-lg p-2"
               required
             />
             <ShouldRender when={errors.Branch}>
@@ -157,13 +157,13 @@ function Signup() {
           </div>
 
           <div className="mb-4">
-            <label className="block mb-1 font-semibold">Section</label>
+            <label className="block mb-1 font-semibold text-primary">Section</label>
             <input
               name="Section"
               type="text"
               value={user.Section}
               onChange={onInputChange}
-              className="block border border-gray-300 w-full rounded p-2"
+              className="block border border-gray-300 w-full rounded-lg p-2"
               required
             />
             <ShouldRender when={errors.Section}>
@@ -172,13 +172,13 @@ function Signup() {
           </div>
 
           <div className="mb-4">
-            <label className="block mb-1 font-semibold">Email</label>
+            <label className="block mb-1 font-semibold text-primary">Email</label>
             <input
               name="email"
               type="email"
               value={user.email}
               onChange={onInputChange}
-              className="block border border-gray-300 w-full rounded p-2"
+              className="block border border-gray-300 w-full rounded-lg p-2"
               required
             />
             <ShouldRender when={errors.email}>
@@ -186,14 +186,14 @@ function Signup() {
             </ShouldRender>
           </div>
 
-          <div className="mb-4">
-            <label className="block mb-1 font-semibold">Password</label>
+          <div className="mb-8">
+            <label className="block mb-1 font-semibold text-primary">Password</label>
             <input
               name="password"
               type="password"
               value={user.password}
               onChange={onInputChange}
-              className="block border border-gray-300 w-full rounded p-2"
+              className="block border border-gray-300 w-full rounded-lg p-2"
               required
             />
             <ShouldRender when={errors.password}>
@@ -204,7 +204,7 @@ function Signup() {
           <div className="mb-4">
             <button
               type="submit"
-              className="w-full bg-primary hover:bg-secondary text-white py-2 rounded focus:outline-none"
+              className="w-full bg-primary hover:bg-secondary text-white py-2 rounded-lg focus:outline-none"
               disabled={!isFormValid()}
             >
               Sign Up

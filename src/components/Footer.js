@@ -6,14 +6,14 @@ const Footer = () => {
   return (
     <footer className="bg-primary text-white py-10">
       <div className="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-10">
-        <div>
+        <div className="hidden sm:block">
         <img 
             src="https://www.lords.ac.in/wp-content/uploads/2023/04/Website-Logo.png" 
             alt="Lords Institute Logo" 
             className="mt-4 h-24 w-54"
           />
         </div>
-        <div>
+        <div className="hidden sm:block">
           <h2 className="text-lg font-bold mb-4">About Lords</h2>
           <ul>
             <li><a href="https://www.lords.ac.in/overview/" target="_blank" className="hover:underline">Overview</a></li>
@@ -21,7 +21,7 @@ const Footer = () => {
             <li><a href="https://www.lords.ac.in/infrastructure/world-class-facilities/" target="_blank" className="hover:underline">Facilities</a></li>
           </ul>
         </div>
-        <div>
+        <div className="hidden sm:block">
           <h2 className="text-lg font-bold mb-4">Admissions</h2>
           <ul>
             <li><a href="https://www.lords.ac.in/domestic/courses-offered/"  target="_blank" className="hover:underline">Courses Offered</a></li>
@@ -29,16 +29,22 @@ const Footer = () => {
             <li><a href="https://www.lords.ac.in/international/courses-offered/" target="_blank" className="hover:underline">International Students</a></li>
           </ul>
         </div>
-        <div>
+        <div className="text-center sm:text-left">
           <h2 className="text-lg font-bold mb-4">Contact</h2>
           <p className="mb-4">
             +91-6309012442/43<br />
             <a href="mailto:principal@lords.ac.in" className="hover:underline">principal@lords.ac.in</a>
           </p>
-          <div className="ml-5 flex space-x-4">
-            <a href="https://www.facebook.com/lordsinstitute/" target="_blank" className="hover:text-primary"><FaFacebook size={24} /></a>
-            <a href="https://x.com/lords_institute/" target="_blank" className="hover:text-primary"><FaTwitter size={24} /></a>
-            <a href="https://www.linkedin.com/school/lords-institute-of-engineering-&-technology/" target="_blank" className="hover:text-primary"><FaLinkedin size={24} /></a>
+          <div className="flex justify-center sm:justify-start space-x-4 sm:ml-4">
+            <a href="https://www.facebook.com/lordsinstitute/" target="_blank" className="hover:text-primary">
+              <FaFacebook size={24} />
+            </a>
+            <a href="https://x.com/lords_institute/" target="_blank" className="hover:text-primary">
+              <FaTwitter size={24} />
+            </a>
+            <a href="https://www.linkedin.com/school/lords-institute-of-engineering-&-technology/" target="_blank" className="hover:text-primary">
+              <FaLinkedin size={24} />
+            </a>
           </div>
         </div>
       </div>

@@ -14,13 +14,15 @@ const Home = () => {
 
     return (
         <div className="min-h-screen bg-gray-100 flex flex-col justify-center items-center p-6">
-            <h1 className="text-5xl font-bold text-primary mb-6">Welcome to the Student Portal</h1>
-            <p className="text-lg text-gray-700 mb-8 text-center">
+            <h1 className="text-4xl md:text-5xl font-bold text-primary mb-6 text-center">
+                Welcome to the Student Portal
+            </h1>
+            <p className="text-base md:text-lg text-gray-700 mb-8 text-center max-w-lg">
                 Select a subject to begin your test. You can explore various subjects and take interactive quizzes to assess your knowledge.
             </p>
 
-            <div className="w-full max-w-md bg-white shadow-lg rounded-lg p-6">
-                <h2 className="text-2xl font-semibold text-gray-800 mb-4">Select Subject</h2>
+            <div className="w-full max-w-sm bg-white shadow-lg rounded-lg p-6">
+                <h2 className="text-xl md:text-2xl font-semibold text-gray-800 mb-4">Select Subject</h2>
                 <select
                     value={selectedSubject}
                     onChange={handleChange}
