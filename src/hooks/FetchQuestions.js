@@ -1,57 +1,56 @@
-import { useEffect, useState } from "react"
-import { useDispatch } from "react-redux";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { getServerData } from "../helper/helper";
+import * as Action from '../redux/question_reducer';
+import store from '../redux/store';
 
-/** redux actions */
-import * as Action from '../redux/question_reducer'
-
-/** Custom hook to fetch question data from the backend and set it in the Redux store */
 export const useFetchQuestion = () => {
-    // Dispatch: A function used to send actions to the Redux store to update the state.
-    const dispatch = useDispatch();  // Get the dispatch function to send actions to the Redux store
-    
-    // State to manage loading status, API data, and server errors
+    const dispatch = useDispatch();
+    const rollNumber = useSelector((state) => state.result.userId);
     const [getData, setGetData] = useState({ 
-        isLoading: false,  // Track if data is being fetched
-        apiData: [],       // Store the fetched question data
-        serverError: null  // Store any errors that occur during data fetch
+        isLoading: false,
+        apiData: [],
+        serverError: null
     });
 
     useEffect(() => {
-        // Set loading state to true when the hook runs
-        setGetData(prev => ({...prev, isLoading: true})); // prev is the previous state of the data that is being updated.
+        if (!rollNumber) return;
 
-        /** Async function to fetch question data from a simulated backend */
+        setGetData(prev => ({ ...prev, isLoading: true }));
+
         (async () => {
-            try {
-                const [{ questions, answers }] = await getServerData(`${process.env.REACT_APP_BACKEND_URI}/api/questions`, (data) => data);
+          try {
+            const url = `${process.env.REACT_APP_BACKEND_URI}/api/questions?rollNumber=${rollNumber}`;
+            const data = await getServerData(url);
 
-                if (questions.length > 0) {
-                    // If data is available, update the state with the data and stop loading
-                    setGetData(prev => ({...prev, isLoading: false}));
-                    setGetData(prev => ({...prev, apiData: questions}));
+            if (data && data.questions && data.questions.length > 0) {
+              const { questions, answers } = data;
 
-                    /** Dispatch the action to update the Redux store with the question data */
-                    dispatch(Action.startExamAction({ question : questions, answers }))
-                } else {
-                    // Throw an error if no questions are available
-                    throw new Error("No Questions Available");
-                }
-            } catch (error) {
-                // Handle any errors during data fetch and update state
-                setGetData(prev => ({...prev, isLoading: false}));
-                setGetData(prev => ({...prev, serverError: error}));
+              console.log("Fetched questions:", questions);
+              setGetData({ isLoading: false, apiData: questions, serverError: null });
+
+              // Dispatch action to store data in Redux state
+              dispatch(Action.startExamAction({ questions, answers }));
+
+              // Log state after dispatch to confirm update
+              console.log("State after dispatch:", store.getState());
+            } else {
+              throw new Error("No Questions Available");
             }
+          } catch (error) {
+            setGetData({ isLoading: false, apiData: [], serverError: error.message });
+            console.error("Error fetching data:", error);
+          }
         })();
-    }, [dispatch]);  // The hook runs when the dispatch function changes (typically only on mount)
+    }, [dispatch, rollNumber]);
 
-    // Return the current state and the state updater function
     return [getData, setGetData];
 }
 
 export const MoveNextQuestion = () => async (dispatch) => {
     try {
-        dispatch(Action.moveNextAction()); // increment the current question index
+        console.log("Dispatching MoveNextQuestion action");
+        dispatch(Action.moveNextAction());
     } catch (error) {
         console.log(error);
     }
@@ -59,8 +58,9 @@ export const MoveNextQuestion = () => async (dispatch) => {
 
 export const MovePrevQuestion = () => async (dispatch) => {
     try {
-        dispatch(Action.movePrevAction()); // decrement the current question index
+        console.log("Dispatching MovePrevQuestion action");
+        dispatch(Action.movePrevAction());
     } catch (error) {
-        console.log(error)
+        console.log(error);
     }
 }

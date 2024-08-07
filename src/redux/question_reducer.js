@@ -1,51 +1,51 @@
-// define how questions and answers are managed.
-
-import { createSlice } from "@reduxjs/toolkit"
+import { createSlice } from "@reduxjs/toolkit";
 
 export const questionReducer = createSlice({
-    name: 'question', // Slice name
+    name: 'question',
     initialState: {
-        queue: [], // Array to hold the questions
-        answers: [], // Array to hold the answers
-        trace: 0 // Index to trace the current question
+        queue: [],
+        answers: [],
+        trace: 0
     },
     reducers: {
-        // This is an Action to start the exam by setting the question queue
-        startExamAction: (state, action) => { // state is the current state, action is the payload
-            let { question, answers} = action.payload
+        startExamAction: (state, action) => {
+            const { questions, answers } = action.payload;
+            console.log("Setting questions in state:", questions);
             return {
-                ...state, // Copy the existing state
-                queue : question, // Update the questions queue with the payload data
+                ...state,
+                queue: questions,  // Update to use questions
                 answers
-            }
+            };
         },
-        moveNextAction: (state) => { // Move to the next question   
-            return {
-                ...state,
-                trace: state.trace + 1
+        moveNextAction: (state) => {
+            console.log(`Attempting to move to next question. Current trace: ${state.trace}`);
+            if (state.trace < state.queue.length - 1) {
+                return {
+                    ...state,
+                    trace: state.trace + 1
+                };
             }
+            console.log(`Cannot move next. Current trace: ${state.trace}`);
+            return state;
         },
-        movePrevAction: (state) => { // Move to the previous question
-            return {
-                ...state,
-                trace: state.trace - 1
+        movePrevAction: (state) => {
+            console.log(`Attempting to move to previous question. Current trace: ${state.trace}`);
+            if (state.trace > 0) {
+                return {
+                    ...state,
+                    trace: state.trace - 1
+                };
             }
+            console.log(`Cannot move previous. Current trace: ${state.trace}`);
+            return state;
         },
-        resetAllAction: () => { // Reset the state after the quiz is completed
-            return {
-                queue: [],
-                answers: [],
-                trace: 0
-            }
-        }
+        resetAllAction: () => ({
+            queue: [],
+            answers: [],
+            trace: 0
+        })
     }
 });
 
-/*
-    Action: An event or instruction that describes what happened in the app.
-    Reducer: A function that updates the app’s state based on actions.
-    Dispatch: A function used to send actions to the Redux store to update the state.
-*/
-export const { startExamAction, moveNextAction, movePrevAction, resetAllAction } = questionReducer.actions // Export the action*
-
-export default questionReducer.reducer; // Export the reducer
+export const { startExamAction, moveNextAction, movePrevAction, resetAllAction } = questionReducer.actions;
+export default questionReducer.reducer;

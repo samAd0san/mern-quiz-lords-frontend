@@ -8,9 +8,17 @@ export default function ResultTable() {
     const [expandedRows, setExpandedRows] = useState(new Set());
 
     useEffect(() => {
-        getServerData(`${process.env.REACT_APP_BACKEND_URI}/api/result`, (res) => {
-            setData(res);
-        });
+        // Fetch data on component mount
+        const fetchData = async () => {
+            try {
+                const result = await getServerData(`${process.env.REACT_APP_BACKEND_URI}/api/result`);
+                setData(result);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        fetchData();
     }, []);
 
     const handleRowClick = (index) => {

@@ -42,8 +42,24 @@ export default function Quiz() {
     console.log(trace, selectedAnswers, result);
   });
 
+  function handleSubmit() {
+    // Update result for the last question
+    if (selectedAnswers[trace] !== undefined) {
+      dispatch(updateResult({ trace, checked: selectedAnswers[trace] }));
+    }
+
+    // Submit all answers and navigate to the result page
+    const finalAnswers = queue.map((_, index) =>
+      selectedAnswers[index] !== undefined
+        ? selectedAnswers[index]
+        : undefined
+    );
+    dispatch(PushAnswer(finalAnswers));
+    navigate("/result");
+  }
+
   function onNext() {
-    if (trace < queue.length) {
+    if (trace < queue.length - 1) {
       dispatch(MoveNextQuestion());
 
       // Update the result with the selected answer
@@ -53,25 +69,18 @@ export default function Quiz() {
         // Set the result to undefined if no answer is selected
         dispatch(updateResult({ trace, checked: undefined }));
       }
-    } else if (result.length <= trace) {
-      // Create a result array that includes undefined for unselected answers
-      const updatedAnswers = queue.map((_, index) =>
-        selectedAnswers[index] !== undefined
-          ? selectedAnswers[index]
-          : undefined
-      );
-      dispatch(PushAnswer(updatedAnswers));
+    } else {
+      // If it's the last question, do not move to the next question but handle submission
+      handleSubmit();
     }
   }
 
-  // handles updating the result when clicking the next button and then moving to the previous question
   function onPrev() {
     if (trace > 0) {
       dispatch(MovePrevQuestion());
 
       // Update the result with the selected answer
       if (selectedAnswers[trace] !== undefined) {
-        // Update the result in the Redux store with the selected answer for the current question.
         dispatch(updateResult({ trace, checked: selectedAnswers[trace] }));
       }
     }
@@ -83,7 +92,7 @@ export default function Quiz() {
       [trace]: answer,
     });
 
-    // Update the result immediately when the answer changes (or) Dispatch is done immediately when the answer changes.
+    // Update the result immediately when the answer changes
     dispatch(updateResult({ trace, checked: answer }));
   }
 
@@ -133,12 +142,21 @@ export default function Quiz() {
         ) : (
           <div></div>
         )}
-        <button
-          className="btn bg-primary transition-all duration-300 text-white font-bold py-2 px-4 rounded-md hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-secondary"
-          onClick={onNext}
-        >
-          Next
-        </button>
+        {trace === queue.length - 1 ? (
+          <button
+            className="btn bg-green-500 transition-all duration-300 text-white font-bold py-2 px-4 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500"
+            onClick={handleSubmit}
+          >
+            Submit
+          </button>
+        ) : (
+          <button
+            className="btn bg-primary transition-all duration-300 text-white font-bold py-2 px-4 rounded-md hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-secondary"
+            onClick={onNext}
+          >
+            Next
+          </button>
+        )}
       </div>
     </div>
   );
