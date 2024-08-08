@@ -8,7 +8,7 @@ import { useNavigate, Navigate } from "react-router-dom";
 // This component displays the quiz application
 export default function Quiz() {
   const [selectedAnswers, setSelectedAnswers] = useState({});
-  const [timer, setTimer] = useState(60); // Timer state for 1 minute (1min = 60 here)
+  const [timer, setTimer] = useState(1200); // Timer state for 1 minute (1min = 60 here)
   const [quizStarted, setQuizStarted] = useState(false);
 
   // Gets the state from the store
