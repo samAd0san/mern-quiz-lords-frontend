@@ -108,7 +108,7 @@ export default function Quiz() {
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col justify-center items-center p-4 md:p-6">
       <h1 className="text-3xl md:text-4xl font-bold text-primary mb-6 md:mb-8 text-center">
-        Compiler Design
+        Java Interview Questions
       </h1>
       {quizStarted && (
         <div className="mb-4">

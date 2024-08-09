@@ -53,7 +53,7 @@ const Main = () => {
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col justify-center items-center p-4">
       <h1 className="text-4xl font-bold text-primary mb-4 mt-4 text-center">
-        Compiler Design
+        Java Interview Questions
       </h1>
 
       <ol className="list-decimal list-inside text-md text-black font-medium space-y-1 mb-8 max-w-xs md:max-w-md lg:max-w-lg">
