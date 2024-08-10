@@ -115,7 +115,10 @@ export default function Quiz() {
           <h2 className="text-lg md:text-xl">Time left: {formatTime(timer)}</h2>
         </div>
       )}
-      <div className="w-full max-w-md md:max-w-3xl mb-6 md:mb-8">
+      <div
+        className="w-full max-w-md md:max-w-3xl mb-6 md:mb-8 select-none"
+        onContextMenu={(e) => e.preventDefault()}
+      >
         <Questions
           onChecked={handleAnswerChange}
           selectedAnswer={selectedAnswers[trace]}

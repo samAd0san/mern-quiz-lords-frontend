@@ -24,7 +24,17 @@ function Signup() {
   const validateInput = (name, value) => {
     let errorMsg = "";
 
-    if (name === "firstName" || name === "lastName") {
+    if (name === "firstName") {
+      if (!value) {
+        errorMsg = "First Name is mandatory";
+      } else if (value.length < 4) {
+        errorMsg = "Min 4 characters";
+      } else if (value.length > 15) {
+        errorMsg = "Max 15 characters";
+      }
+    }
+
+    if (name === "lastName") {
       if (!value) {
         errorMsg = "This field is required";
       } else if (value.length < 3) {
@@ -95,7 +105,9 @@ function Signup() {
 
         <form onSubmit={onSignup}>
           <div className="mb-4">
-            <label className="block mb-1 font-semibold text-primary">First Name</label>
+            <label className="block mb-1 font-semibold text-primary">
+              First Name
+            </label>
             <input
               name="firstName"
               type="text"
@@ -112,7 +124,9 @@ function Signup() {
           </div>
 
           <div className="mb-4">
-            <label className="block mb-1 font-semibold text-primary">Last Name</label>
+            <label className="block mb-1 font-semibold text-primary">
+              Last Name
+            </label>
             <input
               name="lastName"
               type="text"
@@ -127,7 +141,9 @@ function Signup() {
           </div>
 
           <div className="mb-4">
-            <label className="block mb-1 font-semibold text-primary">Roll Number</label>
+            <label className="block mb-1 font-semibold text-primary">
+              Roll Number
+            </label>
             <input
               name="rollNo"
               type="number"
@@ -142,7 +158,9 @@ function Signup() {
           </div>
 
           <div className="mb-4">
-            <label className="block mb-1 font-semibold text-primary">Branch</label>
+            <label className="block mb-1 font-semibold text-primary">
+              Branch
+            </label>
             <input
               name="Branch"
               type="text"
@@ -157,7 +175,9 @@ function Signup() {
           </div>
 
           <div className="mb-4">
-            <label className="block mb-1 font-semibold text-primary">Section</label>
+            <label className="block mb-1 font-semibold text-primary">
+              Section
+            </label>
             <input
               name="Section"
               type="text"
@@ -172,7 +192,9 @@ function Signup() {
           </div>
 
           <div className="mb-4">
-            <label className="block mb-1 font-semibold text-primary">Email</label>
+            <label className="block mb-1 font-semibold text-primary">
+              Email
+            </label>
             <input
               name="email"
               type="email"
@@ -187,7 +209,9 @@ function Signup() {
           </div>
 
           <div className="mb-8">
-            <label className="block mb-1 font-semibold text-primary">Password</label>
+            <label className="block mb-1 font-semibold text-primary">
+              Password
+            </label>
             <input
               name="password"
               type="password"
