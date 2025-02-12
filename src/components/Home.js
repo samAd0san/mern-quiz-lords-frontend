@@ -7,7 +7,7 @@ const Home = () => {
 
     const handleChange = (event) => {
         setSelectedSubject(event.target.value);
-        if (event.target.value === 'CD') {
+        if (event.target.value === 'AS') {
             navigate('/main'); // Redirect to Main component
         }
     };
@@ -29,9 +29,7 @@ const Home = () => {
                     className="w-full px-4 py-2 bg-gray-50 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
                 >
                     <option value="">-- Select an Option --</option>
-                    <option value="CD">Compiler Design</option>
-                    <option value="DS">Data structures</option>
-                    <option value="Python">Python</option>
+                    <option value="AS">Assessment Test - 1</option>
                     {/* Add more options here as needed */}
                 </select>
             </div>
