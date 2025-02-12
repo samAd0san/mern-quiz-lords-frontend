@@ -68,9 +68,9 @@ const Header = () => {
               </ShouldRender>
               <ShouldRender when={isLoggedin}>
                 <li className="text-2xl">
-                  <Link to="/profile" className="hover:underline">
+                  {/* <Link to="/profile" className="hover:underline"> */}
                     <FaUserCircle />
-                  </Link>
+                  {/* </Link> */}
                 </li>
               </ShouldRender>
             </ul>

@@ -8,9 +8,9 @@ const Footer = () => {
       <div className="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-10">
         <div className="hidden sm:block">
         <img 
-            src="https://www.lords.ac.in/wp-content/uploads/2023/04/Website-Logo.png" 
+            src="https://upload.wikimedia.org/wikipedia/en/e/e9/Lords_Institute_of_Engineering_and_Technology_logo.png"
             alt="Lords Institute Logo" 
-            className="mt-4 h-24 w-54"
+            className="ml-12 h-32 w-58"
           />
         </div>
         <div className="hidden sm:block">
@@ -49,7 +49,7 @@ const Footer = () => {
         </div>
       </div>
       <div className="mt-10 text-center border-t border-white-100 pt-4">
-        <p>&copy; 2024 Lords Institute of Engineering and Technology. All rights reserved.</p>
+        <p>&copy; 2025 Lords Institute of Engineering and Technology. All rights reserved.</p>
       </div>
     </footer>
   );

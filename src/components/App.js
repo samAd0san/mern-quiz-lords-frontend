@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import '../styles/App.css';
 
@@ -21,6 +21,21 @@ import { ToastContainer } from "react-toastify";
 import ScrollToTop from "../utils/ScrollToTop";
 
 const Layout = () => {
+
+  useEffect(() => {
+    // Disable copy and prevent text selection
+    const handleCopy = (event) => {
+      event.preventDefault();
+      alert("Copy is disabled on this site!");
+    };
+
+    document.addEventListener('copy', handleCopy);
+
+    return () => {
+      document.removeEventListener('copy', handleCopy);
+    };
+  }, []);
+
   return (
     <div className="flex flex-col min-h-screen">
       <Header />

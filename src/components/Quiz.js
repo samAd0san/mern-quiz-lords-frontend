@@ -8,7 +8,7 @@ import { useNavigate, Navigate } from "react-router-dom";
 // This component displays the quiz application
 export default function Quiz() {
   const [selectedAnswers, setSelectedAnswers] = useState({});
-  const [timer, setTimer] = useState(600); // Timer state for 10 minutes (1min = 60 here)
+  const [timer, setTimer] = useState(1800); // Timer state for 30 minutes (1min = 60 here)
   const [quizStarted, setQuizStarted] = useState(false);
 
   // Gets the state from the store
@@ -106,17 +106,17 @@ export default function Quiz() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col justify-center items-center p-4 md:p-6">
+    <div className="min-h-screen bg-gray-50 flex flex-col justify-center items-center p-4 md:p-6">
       <h1 className="text-3xl md:text-4xl font-bold text-primary mb-6 md:mb-8 text-center">
-        Java Interview Questions
+        Assessment Test
       </h1>
       {quizStarted && (
         <div className="mb-4">
-          <h2 className="text-lg md:text-xl">Time left: {formatTime(timer)}</h2>
+          <h2 className="text-lg md:text-xl text-red-500">Time left: {formatTime(timer)}</h2>
         </div>
       )}
       <div
-        className="w-full max-w-md md:max-w-3xl mb-6 md:mb-8 select-none"
+        className="w-full max-w-md md:max-w-3xl mb-6 md:mb-8 select-none border border-4 rounded-xl shadow-lg border-secondary"
         onContextMenu={(e) => e.preventDefault()}
       >
         <Questions
