@@ -57,7 +57,7 @@ const Main = () => {
       </h1>
 
       <ol className="list-decimal list-inside text-md text-black font-medium space-y-1 mb-8 max-w-xs md:max-w-md lg:max-w-lg">
-        <li>You will be asked 10 questions one after another.</li>
+        <li>You will be asked 30 questions one after another.</li>
         <li>One Mark is awarded for the correct answer.</li>
         <li>The result will be declared at the end of the quiz.</li>
       </ol>
@@ -79,7 +79,7 @@ const Main = () => {
           to={"/quiz"}
           onClick={startQuiz}
         >
-          Start Quiz
+          Start Test
         </Link>
       </div>
     </div>
