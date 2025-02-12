@@ -56,14 +56,14 @@ export default function Result() {
                     <span className='text-sm md:text-lg text-tertiary'>Questions Attempted:</span>
                     <span className='font-bold text-sm md:text-lg text-gray-800'>{attempts || 0}</span>
                 </div>
-                <div className='flex justify-between mb-4'>
+                {/* <div className='flex justify-between mb-4'>
                     <span className='text-sm md:text-lg text-tertiary'>Your Marks:</span>
                     <span className='font-bold text-sm md:text-lg text-gray-800'>{earnPoints || 0}</span>
-                </div>
-                <div className='flex justify-between mb-4'>
+                </div> */}
+                {/* <div className='flex justify-between mb-4'>
                     <span className='text-sm md:text-lg text-tertiary'>Quiz Result:</span>
                     <span style={{ color: `${flag ? "#10B981" : "#ff2a66"}` }} className='font-bold'>{flag ? "Passed" : "Failed"}</span>
-                </div>
+                </div> */}
             </div>
 
             {/* Restart Button */}

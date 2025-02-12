@@ -70,6 +70,11 @@ export default function Quiz() {
   }
 
   function handleSubmit() {
+    const confirmation = window.confirm("Are you sure you want to submit?");
+    if (!confirmation) {
+      return; // If the user clicks 'No', do nothing and return.
+    }
+  
     // Update the result for the last question if needed
     if (selectedAnswers[trace] !== undefined) {
       dispatch(updateResult({ trace, checked: selectedAnswers[trace] }));
