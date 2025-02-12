@@ -35,7 +35,7 @@ const Header = () => {
         />
       </div>
       {/*Adjust this margin acc*/}
-      <header className="bg-secondary h-24 flex-grow ml-6">
+      <header className="bg-primary h-24 flex-grow ml-6">
         <div className="flex items-center justify-end mt-6 px-4 sm:px-16 py-2">
           <nav>
             <ul className="flex space-x-4 sm:space-x-6 text-white font-bold">
