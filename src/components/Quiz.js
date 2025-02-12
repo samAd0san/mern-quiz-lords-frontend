@@ -43,7 +43,7 @@ export default function Quiz() {
   });
 
   function onNext() {
-    if (trace < queue.length) {
+    if (trace < queue.length - 1) {
       dispatch(MoveNextQuestion());
 
       // Update the result with the selected answer
@@ -53,14 +53,6 @@ export default function Quiz() {
         // Set the result to undefined if no answer is selected
         dispatch(updateResult({ trace, checked: undefined }));
       }
-    } else if (result.length <= trace) {
-      // Create a result array that includes undefined for unselected answers
-      const updatedAnswers = queue.map((_, index) =>
-        selectedAnswers[index] !== undefined
-          ? selectedAnswers[index]
-          : undefined
-      );
-      dispatch(PushAnswer(updatedAnswers));
     }
   }
 
@@ -75,6 +67,21 @@ export default function Quiz() {
         dispatch(updateResult({ trace, checked: selectedAnswers[trace] }));
       }
     }
+  }
+
+  function handleSubmit() {
+    // Update the result for the last question if needed
+    if (selectedAnswers[trace] !== undefined) {
+      dispatch(updateResult({ trace, checked: selectedAnswers[trace] }));
+    }
+
+    // Create a result array that includes undefined for unselected answers
+    const updatedAnswers = queue.map((_, index) =>
+      selectedAnswers[index] !== undefined ? selectedAnswers[index] : undefined
+    );
+
+    dispatch(PushAnswer(updatedAnswers));
+    navigate("/result");
   }
 
   function handleAnswerChange(answer) {
@@ -101,9 +108,12 @@ export default function Quiz() {
     return `${minutes}:${secs < 10 ? `0${secs}` : secs}`;
   };
 
-  if (result.length && result.length >= queue.length) {
-    return <Navigate to={"/result"} replace={true} />;
-  }
+  // Remove the automatic navigation when result length equals queue length
+  // if (result.length && result.length >= queue.length) {
+  //   return <Navigate to={"/result"} replace={true} />;
+  // }
+
+  const isLastQuestion = trace === queue.length - 1;
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center items-center p-4 md:p-6">
@@ -136,12 +146,22 @@ export default function Quiz() {
         ) : (
           <div></div>
         )}
-        <button
-          className="btn bg-primary transition-all duration-300 text-white font-bold py-2 px-4 rounded-md hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-secondary"
-          onClick={onNext}
-        >
-          Next
-        </button>
+
+        {isLastQuestion ? (
+          <button
+            className="btn bg-green-600 transition-all duration-300 text-white font-bold py-2 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
+            onClick={handleSubmit}
+          >
+            Submit
+          </button>
+        ) : (
+          <button
+            className="btn bg-primary transition-all duration-300 text-white font-bold py-2 px-4 rounded-md hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-secondary"
+            onClick={onNext}
+          >
+            Next
+          </button>
+        )}
       </div>
     </div>
   );
