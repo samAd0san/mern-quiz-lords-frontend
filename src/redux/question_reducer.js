@@ -12,9 +12,11 @@ export const questionReducer = createSlice({
     reducers: {
         // This is an Action to start the exam by setting the question queue
         startExamAction: (state, action) => { // state is the current state, action is the payload
+            let { question, answers} = action.payload
             return {
                 ...state, // Copy the existing state
-                queue: action.payload // Update the questions queue with the payload data
+                queue : question, // Update the questions queue with the payload data
+                answers
             }
         },
         moveNextAction: (state) => { // Move to the next question   
