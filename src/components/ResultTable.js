@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { getServerData } from '../helper/helper';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import * as XLSX from 'xlsx';
 
 export default function ResultTable() {
     const [data, setData] = useState([]);
@@ -29,7 +30,6 @@ export default function ResultTable() {
         html2canvas(input, { scale: 2, useCORS: true }).then((canvas) => {
             const imgData = canvas.toDataURL('image/jpeg', 0.5);
             const pdf = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4', compress: true });
-
             const imgWidth = 210;
             const pageHeight = 297;
             const imgHeight = (canvas.height * imgWidth) / canvas.width;
@@ -48,6 +48,20 @@ export default function ResultTable() {
 
             pdf.save(`result-table-${year}-${section}`);
         });
+    };
+
+    const exportToExcel = () => {
+        const worksheet = XLSX.utils.json_to_sheet(data.map((item, index) => ({
+            'S.No': index + 1,
+            'Roll Number': item?.rollNo || '',
+            'Name': `${item?.firstName || ''} ${item?.lastName || ''}`,
+            'Marks': item?.points || 0,
+            'Result': item?.achieved || ''
+        })));
+
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'Results');
+        XLSX.writeFile(workbook, `result-table-${year}-${section}.xlsx`);
     };
 
     return (
@@ -94,17 +108,17 @@ export default function ResultTable() {
                 </select>
 
                 <button
-                    onClick={fetchResults}
-                    className='bg-blue-500 text-white px-4 py-2 rounded ml-2 hover:bg-blue-600'
-                >
-                    Apply Filters
-                </button>
-
-                <button 
-                    onClick={exportToPDF} 
-                    className='bg-green-500 text-white px-4 py-2 rounded ml-2 hover:bg-green-600'
+                    onClick={exportToPDF}
+                    className='bg-primary text-white px-4 py-2 rounded ml-2 hover:bg-secondary'
                 >
                     Export to PDF
+                </button>
+
+                <button
+                    onClick={exportToExcel}
+                    className='bg-primary text-white px-4 py-2 rounded ml-2 hover:bg-secondary'
+                >
+                    Export to Excel
                 </button>
             </div>
 
@@ -121,21 +135,17 @@ export default function ResultTable() {
                 <tbody>
                     {data.length === 0 ? (
                         <tr>
-                            <td colSpan="4" className="text-center py-4 font-bold text-red-500 text-2xl">No Data Found</td>
+                            <td colSpan="5" className="text-center py-4 font-bold text-red-500 text-2xl">No Data Found</td>
                         </tr>
                     ) : (
                         data.map((v, i) => (
-                            <React.Fragment key={i}>
-                                <tr 
-                                    className='table-body border-b text-center cursor-pointer hover:bg-gray-100' 
-                                >
-                                    <td className='px-6 py-4 font-bold text-medium text-lg'>{i + 1}</td>
-                                    <td className='px-6 py-4 font-bold text-medium text-lg'>{v?.rollNo || ''}</td>
-                                    <td className='px-6 py-4 font-bold text-medium text-lg'>{v?.firstName || ''}</td>
-                                    <td className='px-6 py-4 text-medium text-lg'>{v?.points || 0}</td>
-                                    <td className={`px-6 py-4 text-medium text-lg ${v?.achieved === 'Failed' ? 'text-red-500' : 'text-green-500'}`}>{v?.achieved}</td>
-                                </tr>
-                            </React.Fragment>
+                            <tr key={i} className='table-body border-b text-center cursor-pointer hover:bg-gray-100'>
+                                <td className='px-6 py-4 font-bold text-medium text-lg'>{i + 1}</td>
+                                <td className='px-6 py-4 font-bold text-medium text-lg'>{v?.rollNo || ''}</td>
+                                <td className='px-6 py-4 font-bold text-medium text-lg'>{`${v?.firstName || ''} ${v?.lastName || ''}`}</td>
+                                <td className='px-6 py-4 text-medium text-lg'>{v?.points || 0}</td>
+                                <td className={`px-6 py-4 text-medium text-lg ${v?.achieved === 'Failed' ? 'text-red-500' : 'text-green-500'}`}>{v?.achieved}</td>
+                            </tr>
                         ))
                     )}
                 </tbody>
