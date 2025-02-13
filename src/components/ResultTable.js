@@ -11,10 +11,7 @@ export default function ResultTable() {
 
     // Fetch results based on filters (branch, year, section)
     const fetchResults = () => {
-        let apiUrl = `${process.env.REACT_APP_BACKEND_URI}/api/result/branch/${branch}/year/${year}`;
-        if (section) {
-            apiUrl += `/section/${section}`;
-        }
+        let apiUrl = `${process.env.REACT_APP_BACKEND_URI}/api/result/branch/${branch}/year/${year}/section/${section}`;
         getServerData(apiUrl, (res) => {
             setData(res);
         });
