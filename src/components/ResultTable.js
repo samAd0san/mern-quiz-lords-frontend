@@ -5,64 +5,120 @@ import html2canvas from 'html2canvas';
 
 export default function ResultTable() {
     const [data, setData] = useState([]);
-    const [expandedRows, setExpandedRows] = useState(new Set());
+    const [branch, setBranch] = useState('');  // Branch filter
+    const [year, setYear] = useState('');      // Year filter
+    const [section, setSection] = useState(''); // Section filter
 
-    useEffect(() => {
-        getServerData(`${process.env.REACT_APP_BACKEND_URI}/api/result`, (res) => {
+    // Fetch results based on filters (branch, year, section)
+    const fetchResults = () => {
+        let apiUrl = `${process.env.REACT_APP_BACKEND_URI}/api/result/branch/${branch}/year/${year}`;
+        if (section) {
+            apiUrl += `/section/${section}`;
+        }
+        getServerData(apiUrl, (res) => {
             setData(res);
-        });
-    }, []);
-
-    const handleRowClick = (index) => {
-        setExpandedRows(prevState => {
-            const newExpandedRows = new Set(prevState);
-            if (newExpandedRows.has(index)) {
-                newExpandedRows.delete(index);
-            } else {
-                newExpandedRows.add(index);
-            }
-            return newExpandedRows;
         });
     };
 
+    // UseEffect to load data when filters change
+    useEffect(() => {
+        if (branch && year) {
+            fetchResults();
+        }
+    }, [branch, year, section]);
+
     const exportToPDF = () => {
         const input = document.getElementById('result-table');
-        html2canvas(input).then((canvas) => {
-            const imgData = canvas.toDataURL('image/png');
-            const pdf = new jsPDF();
-            const imgWidth = 210;
-            const pageHeight = 295;
-            const imgHeight = canvas.height * imgWidth / canvas.width;
-            let heightLeft = imgHeight;
+        html2canvas(input, { scale: 2, useCORS: true }).then((canvas) => {
+            const imgData = canvas.toDataURL('image/jpeg', 0.5);
+            const pdf = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4', compress: true });
 
-            pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+            const imgWidth = 210;
+            const pageHeight = 297;
+            const imgHeight = (canvas.height * imgWidth) / canvas.width;
+            let heightLeft = imgHeight;
+            let position = 0;
+
+            pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
             heightLeft -= pageHeight;
 
-            while (heightLeft >= 0) {
+            while (heightLeft > 0) {
+                position -= pageHeight;
                 pdf.addPage();
-                pdf.addImage(imgData, 'PNG', 0, -heightLeft, imgWidth, imgHeight);
+                pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
                 heightLeft -= pageHeight;
             }
 
-            pdf.save('result-table.pdf');
+            pdf.save(`result-table-${year}-${section}`);
         });
     };
 
     return (
         <div className='overflow-x-auto'>
-            <button 
-                onClick={exportToPDF} 
-                className='bg-blue-500 text-white px-4 py-2 rounded mt-2 mb-2 ml-2 hover:bg-blue-600'
-            >
-                Export to PDF
-            </button>
+            <div className='flex gap-4 mb-4 mt-5'>
+                {/* Branch Dropdown */}
+                <select
+                    value={branch}
+                    onChange={(e) => setBranch(e.target.value)}
+                    className='bg-white border border-gray-300 px-4 py-2 rounded'
+                >
+                    <option value="">Select Branch</option>
+                    <option value="cse">CSE</option>
+                    <option value="ece">ECE</option>
+                    <option value="mech">MECH</option>
+                    {/* Add more branches as needed */}
+                </select>
+
+                {/* Year Dropdown */}
+                <select
+                    value={year}
+                    onChange={(e) => setYear(e.target.value)}
+                    className='bg-white border border-gray-300 px-4 py-2 rounded'
+                >
+                    <option value="">Select Year</option>
+                    <option value="2">2nd Year</option>
+                    <option value="3">3rd Year</option>
+                    {/* Add more years if needed */}
+                </select>
+
+                {/* Section Dropdown */}
+                <select
+                    value={section}
+                    onChange={(e) => setSection(e.target.value)}
+                    className='bg-white border border-gray-300 px-4 py-2 rounded'
+                >
+                    <option value="">Select Section</option>
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="C">C</option>
+                    <option value="D">D</option>
+                    <option value="E">E</option>
+                    {/* Add more sections as needed */}
+                </select>
+
+                <button
+                    onClick={fetchResults}
+                    className='bg-blue-500 text-white px-4 py-2 rounded ml-2 hover:bg-blue-600'
+                >
+                    Apply Filters
+                </button>
+
+                <button 
+                    onClick={exportToPDF} 
+                    className='bg-green-500 text-white px-4 py-2 rounded ml-2 hover:bg-green-600'
+                >
+                    Export to PDF
+                </button>
+            </div>
+
             <table id='result-table' className='min-w-full bg-white border border-gray-300 mt-4 mb-20'>
                 <thead className='bg-secondary text-white'>
                     <tr>
-                        <th className='px-6 py-3 text-medium text-lg'>SR</th>
+                        <th className='px-6 py-3 text-medium text-lg'>S.No</th>
                         <th className='px-6 py-3 text-medium text-lg'>Roll Number</th>
-                        <th className='px-6 py-3 text-medium text-lg'>Attempted</th>
-                        <th className='px-6 py-3 text-medium text-lg'>Total Marks</th>
+                        <th className='px-6 py-3 text-medium text-lg'>Name</th>
+                        <th className='px-6 py-3 text-medium text-lg'>Marks</th>
+                        <th className='px-6 py-3 text-medium text-lg'>Result</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -75,38 +131,13 @@ export default function ResultTable() {
                             <React.Fragment key={i}>
                                 <tr 
                                     className='table-body border-b text-center cursor-pointer hover:bg-gray-100' 
-                                    onClick={() => handleRowClick(i)}
                                 >
                                     <td className='px-6 py-4 font-bold text-medium text-lg'>{i + 1}</td>
-                                    <td className='px-6 py-4 font-bold text-medium text-lg'>{v?.username || ''}</td>
-                                    <td className='px-6 py-4 text-medium text-lg'>{v?.attempts || 0}</td>
+                                    <td className='px-6 py-4 font-bold text-medium text-lg'>{v?.rollNo || ''}</td>
+                                    <td className='px-6 py-4 font-bold text-medium text-lg'>{v?.firstName || ''}</td>
                                     <td className='px-6 py-4 text-medium text-lg'>{v?.points || 0}</td>
+                                    <td className={`px-6 py-4 text-medium text-lg ${v?.achieved === 'Failed' ? 'text-red-500' : 'text-green-500'}`}>{v?.achieved}</td>
                                 </tr>
-                                {expandedRows.has(i) && (
-                                    <React.Fragment>
-                                        <tr>
-                                            <td colSpan="4" className='p-4'>
-                                                <h3 className='text-lg font-bold mb-4 text-center text-blue-600'><span className='font-semibold text-black'>Roll Number:</span> {v?.username || ''}</h3>
-                                                <table className='min-w-full bg-gray-100 border'>
-                                                    <thead>
-                                                        <tr>
-                                                            <th className='px-6 py-3 text-medium text-lg'>Q#</th>
-                                                            <th className='px-6 py-3 text-medium text-lg'>Answer</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        {v?.result?.map((ans, idx) => (
-                                                            <tr key={idx} className='text-center'>
-                                                                <td className='px-6 py-4 border text-medium text-lg'>{idx + 1}</td>
-                                                                <td className='px-6 py-4 border text-medium text-lg'>{ans !== null ? ans : 'N/A'}</td>
-                                                            </tr>
-                                                        ))}
-                                                    </tbody>
-                                                </table>
-                                            </td>
-                                        </tr>
-                                    </React.Fragment>
-                                )}
                             </React.Fragment>
                         ))
                     )}
