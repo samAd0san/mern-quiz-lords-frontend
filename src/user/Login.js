@@ -27,7 +27,8 @@ function Login() {
     try {
       const url = `${process.env.REACT_APP_BACKEND_URI}/users/signin`;
       const res = await axios.post(url, user);
-      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("token", res.data.data.token);
+      localStorage.setItem("userEmail", user.email);
       navigate("/");
       setLoggedin(true);
     } catch (error) {

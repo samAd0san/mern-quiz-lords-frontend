@@ -83,7 +83,9 @@ function Signup() {
         password: user.password
       });
       
-      localStorage.setItem("token", loginResponse.data.token);
+      localStorage.setItem("token", loginResponse.data.data.token);
+      // Store the user's email in localStorage for future use
+      localStorage.setItem("userEmail", user.email);
       setLoggedin(true);
       navigate("/");
     } catch (error) {

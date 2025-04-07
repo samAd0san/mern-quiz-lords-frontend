@@ -20,7 +20,16 @@ export const useFetchQuestion = () => {
 
         (async () => {
           try {
-            const url = `${process.env.REACT_APP_BACKEND_URI}/api/questions?rollNumber=${rollNumber}`;
+            // Get the selected subject ID from localStorage
+            const selectedSubjectId = localStorage.getItem("selectedSubjectId");
+            if (!selectedSubjectId) {
+              throw new Error("No subject selected");
+            }
+
+            // Use the subject ID and roll number to fetch questions
+            const url = `${process.env.REACT_APP_BACKEND_URI}/api/questions?subjectId=${selectedSubjectId}&rollNumber=${rollNumber}`;
+            console.log("Fetching questions from URL:", url);
+            
             const data = await getServerData(url);
 
             if (data && data.questions && data.questions.length > 0) {

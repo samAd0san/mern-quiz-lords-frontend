@@ -23,7 +23,10 @@ export function CheckUserExist({ children }){
 /** get server data */
 export async function getServerData(url) {
     try {
-        const response = await axios.get(url);
+        const token = localStorage.getItem('token');
+        const headers = token ? { Authorization: `Bearer ${token}` } : {};
+        
+        const response = await axios.get(url, { headers });
         console.log('Fetched data:', response.data); // Add this line to debug
         return response.data;
     } catch (error) {
@@ -35,7 +38,10 @@ export async function getServerData(url) {
 /** post server data */
 export async function postServerData(url, result, callback) {
     try {
-      const response = await axios.post(url, result);
+      const token = localStorage.getItem('token');
+      const headers = token ? { Authorization: `Bearer ${token}` } : {};
+      
+      const response = await axios.post(url, result, { headers });
       return callback ? callback(response.data) : response.data;
     } catch (error) {
       console.error('Error posting server data:', error);
