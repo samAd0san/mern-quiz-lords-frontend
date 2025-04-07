@@ -16,12 +16,45 @@ export default function Quiz() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [quizCompleted, setQuizCompleted] = useState(false);
 
   const result = useSelector((state) => state.result.result);
   const { queue, trace, answers } = useSelector((state) => state.questions);
   const rollNumber = useSelector((state) => state.result.userId);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  // Prevent navigation away from the quiz
+  useEffect(() => {
+    // Function to handle beforeunload event
+    const handleBeforeUnload = (e) => {
+      if (!quizCompleted) {
+        e.preventDefault();
+        e.returnValue = "You are in the middle of a quiz. Are you sure you want to leave?";
+        return e.returnValue;
+      }
+    };
+
+    // Function to handle navigation attempts
+    const handleNavigation = (e) => {
+      if (!quizCompleted) {
+        e.preventDefault();
+        alert("You cannot navigate away while taking the quiz. Please complete or submit the quiz first.");
+        return false;
+      }
+    };
+
+    // Add event listeners
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    window.history.pushState(null, "", window.location.href);
+    window.addEventListener("popstate", handleNavigation);
+
+    // Clean up event listeners
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      window.removeEventListener("popstate", handleNavigation);
+    };
+  }, [quizCompleted]);
 
   useEffect(() => {
     // Get subject name from localStorage instead of making an API call
@@ -143,6 +176,12 @@ export default function Quiz() {
       );
       
       console.log("Result submission response:", response.data);
+      
+      // Mark quiz as completed to allow navigation
+      setQuizCompleted(true);
+      
+      // Set a flag in localStorage to indicate quiz completion
+      localStorage.setItem("quizCompleted", "true");
       
       // Navigate to the profile page instead of the result page
       navigate("/profile");

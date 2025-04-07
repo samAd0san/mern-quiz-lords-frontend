@@ -1,8 +1,7 @@
-import React from "react";
+import React, { useEffect, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaUserCircle, FaHome, FaInfoCircle, FaEnvelope } from "react-icons/fa";
 import ShouldRender from "../utils/ShouldRender";
-import { useContext, useEffect } from "react";
 import UserContext from "../context/UserContext";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -11,19 +10,34 @@ const Header = () => {
   const { isLoggedin, setLoggedin } = useContext(UserContext);
   const navigate = useNavigate();
 
-  const onLogoutButton = () => {
-    localStorage.removeItem("token");
-    navigate("/signin");
-    setLoggedin(false);
-  };
-
   useEffect(() => {
-    const currentPath = window.location.pathname;
-    if (!isLoggedin && currentPath === "/") {
-      navigate("/signin");
-      toast.error("Please sign in to continue!");
+    // Check if token exists and is valid
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setLoggedin(false);
+      const currentPath = window.location.pathname;
+      if (currentPath !== "/signin" && currentPath !== "/signup") {
+        navigate("/signin");
+        toast.error("Please sign in to continue!");
+      }
+    } else {
+      // Set logged in state to true if token exists
+      setLoggedin(true);
     }
-  }, [isLoggedin, navigate]);
+  }, [isLoggedin, navigate, setLoggedin]);
+
+  const onLogoutButton = () => {
+    // Clear all localStorage items
+    localStorage.removeItem("token");
+    localStorage.removeItem("userEmail");
+    localStorage.removeItem("selectedSubjectId");
+    localStorage.removeItem("selectedSubjectName");
+    localStorage.removeItem("quizCompleted");
+    
+    setLoggedin(false);
+    navigate("/signin");
+    toast.success("Logged out successfully!");
+  };
 
   return (
     <div className="sticky top-0 z-50 bg-white shadow-lg">

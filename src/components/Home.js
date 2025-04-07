@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { FaBook, FaSpinner, FaArrowRight, FaChevronDown, FaGraduationCap } from 'react-icons/fa';
+import { FaBook, FaSpinner, FaArrowRight, FaChevronDown, FaGraduationCap, FaLock } from 'react-icons/fa';
 import Loader from '../utils/Loader';
 import Error from '../utils/Error';
+import UserContext from '../context/UserContext';
 
 const Home = () => {
     const [subjects, setSubjects] = useState([]);
@@ -16,17 +17,25 @@ const Home = () => {
     });
     const [selectedSubject, setSelectedSubject] = useState('');
     const [showDropdown, setShowDropdown] = useState(false);
+    const [quizCompleted, setQuizCompleted] = useState(false);
     const navigate = useNavigate();
     const dropdownRef = useRef(null);
+    const { isLoggedin, setLoggedin } = useContext(UserContext);
 
     useEffect(() => {
+        // Check if user is authenticated
+        const token = localStorage.getItem('token');
+        if (!token) {
+            navigate('/signin');
+            return;
+        }
+
+        // Check if the user has completed a quiz
+        const isQuizCompleted = localStorage.getItem("quizCompleted") === "true";
+        setQuizCompleted(isQuizCompleted);
+        
         const fetchUserInfo = async () => {
             try {
-                const token = localStorage.getItem('token');
-                if (!token) {
-                    throw new Error('No token found');
-                }
-
                 // Get user email from localStorage
                 const email = localStorage.getItem('userEmail');
                 if (!email) {
@@ -75,16 +84,24 @@ const Home = () => {
                 }
 
                 setSubjects(subjectsResponse.data.data);
+                setLoggedin(true); // Set logged in state to true after successful fetch
             } catch (error) {
                 console.error('Error fetching user info or subjects:', error.response || error);
                 setError('Failed to load subjects. Please try again later.');
+                
+                // If token is invalid or expired, redirect to login
+                if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('userEmail');
+                    navigate('/signin');
+                }
             } finally {
                 setLoading(false);
             }
         };
 
         fetchUserInfo();
-    }, []);
+    }, [navigate, setLoggedin]);
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -147,95 +164,115 @@ const Home = () => {
                 <div className="text-center mb-12">
                     <h1 className="text-4xl md:text-5xl font-bold text-primary mb-4">
                         Welcome to Lords Quiz
-                    </h1>
+            </h1>
                     <p className="text-base md:text-lg text-gray-700 max-w-2xl mx-auto">
-                        Select a subject to begin your test. You can explore various subjects and take interactive quizzes to assess your knowledge.
-                    </p>
+                Select a subject to begin your test. You can explore various subjects and take interactive quizzes to assess your knowledge.
+            </p>
                 </div>
 
-                <div className="bg-white rounded-xl shadow-xl border border-gray-100">
-                    <div className="bg-gradient-to-r from-primary to-secondary p-6">
-                        <div className="flex items-center">
-                            <div className="bg-white/20 p-3 rounded-full mr-4">
-                                <FaGraduationCap className="text-white text-2xl" />
+                {quizCompleted ? (
+                    <div className="bg-white rounded-xl shadow-xl border border-gray-100 p-8 text-center">
+                        <div className="bg-red-50 p-6 rounded-lg border border-red-200 mb-6">
+                            <div className="flex items-center justify-center mb-4">
+                                <FaLock className="text-red-500 text-3xl mr-3" />
+                                <h2 className="text-2xl font-bold text-red-700">Quiz Already Completed</h2>
                             </div>
-                            <div>
-                                <h2 className="text-2xl font-bold text-white">Available Subjects</h2>
-                                <p className="text-white/80 mt-1">
-                                    {userInfo.branch} - Year {userInfo.year}, Semester {userInfo.semester}
-                                </p>
-                            </div>
+                            <p className="text-gray-700 mb-4">
+                                You have already completed a quiz in this session.
+                            </p>
+                            <button 
+                                onClick={() => navigate('/profile')} 
+                                className="px-4 py-2 bg-primary text-white rounded-md hover:bg-secondary transition-colors duration-300"
+                            >
+                                Go to Profile
+                            </button>
                         </div>
                     </div>
-
-                    {subjects.length > 0 ? (
-                        <div className="p-8">
-                            <div className="mb-8">
-                                <label htmlFor="subject-select" className="block text-lg font-medium text-gray-700 mb-3">
-                                    Select a Subject
-                                </label>
-                                <div className="relative" ref={dropdownRef}>
-                                    <button
-                                        id="subject-select"
-                                        type="button"
-                                        className="w-full flex items-center justify-between px-5 py-4 bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary text-lg"
-                                        onClick={() => setShowDropdown(!showDropdown)}
-                                    >
-                                        <span className="text-gray-700 font-medium">
-                                            {selectedSubject 
-                                                ? subjects.find(s => s._id === selectedSubject)?.name || 'Select a subject'
-                                                : 'Select a subject'}
-                                        </span>
-                                        <FaChevronDown className={`text-gray-500 transition-transform duration-200 ${showDropdown ? 'transform rotate-180' : ''}`} />
-                                    </button>
-                                    
-                                    {showDropdown && (
-                                        <div className="absolute z-50 mt-1 w-full bg-white shadow-lg rounded-lg border border-gray-200 max-h-60 overflow-y-auto">
-                                            {subjects.map((subject) => (
-                                                <div
-                                                    key={subject._id}
-                                                    className={`px-5 py-4 hover:bg-gray-50 cursor-pointer flex items-center transition-colors duration-200 ${
-                                                        selectedSubject === subject._id ? 'bg-primary/5 border-l-4 border-primary' : ''
-                                                    }`}
-                                                    onClick={() => handleSubjectSelect(subject._id, subject.name)}
-                                                >
-                                                    <div className="bg-primary/10 p-3 rounded-full mr-4">
-                                                        <FaBook className="text-primary text-lg" />
-                                                    </div>
-                                                    <div>
-                                                        <div className="font-medium text-gray-800 text-lg">{subject.name}</div>
-                                                        {subject.code && (
-                                                            <div className="text-sm text-gray-500 mt-1">Code: {subject.code}</div>
-                                                        )}
-                                                    </div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    )}
+                ) : (
+                    <div className="bg-white rounded-xl shadow-xl border border-gray-100">
+                        <div className="bg-gradient-to-r from-primary to-secondary p-6">
+                            <div className="flex items-center">
+                                <div className="bg-white/20 p-3 rounded-full mr-4">
+                                    <FaGraduationCap className="text-white text-2xl" />
+                                </div>
+                                <div>
+                                    <h2 className="text-2xl font-bold text-white">Available Subjects</h2>
+                                    <p className="text-white/80 mt-1">
+                                        {userInfo.branch} - Year {userInfo.year}, Semester {userInfo.semester}
+                                    </p>
                                 </div>
                             </div>
+                        </div>
 
-                            <div className="flex justify-center">
-                                <button
-                                    className={`inline-flex items-center px-8 py-4 text-lg font-bold rounded-lg transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 ${
-                                        selectedSubject
-                                            ? 'bg-primary text-white hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50'
-                                            : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                                    }`}
-                                    onClick={startQuiz}
-                                    disabled={!selectedSubject}
-                                >
-                                    Start Test <FaArrowRight className="ml-3" />
-                                </button>
+                        {subjects.length > 0 ? (
+                            <div className="p-8">
+                                <div className="mb-8">
+                                    <label htmlFor="subject-select" className="block text-lg font-medium text-gray-700 mb-3">
+                                        Select a Subject
+                                    </label>
+                                    <div className="relative" ref={dropdownRef}>
+                                        <button
+                                            id="subject-select"
+                                            type="button"
+                                            className="w-full flex items-center justify-between px-5 py-4 bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary text-lg"
+                                            onClick={() => setShowDropdown(!showDropdown)}
+                                        >
+                                            <span className="text-gray-700 font-medium">
+                                                {selectedSubject 
+                                                    ? subjects.find(s => s._id === selectedSubject)?.name || 'Select a subject'
+                                                    : 'Select a subject'}
+                                            </span>
+                                            <FaChevronDown className={`text-gray-500 transition-transform duration-200 ${showDropdown ? 'transform rotate-180' : ''}`} />
+                                        </button>
+                                        
+                                        {showDropdown && (
+                                            <div className="absolute z-50 mt-1 w-full bg-white shadow-lg rounded-lg border border-gray-200 max-h-60 overflow-y-auto">
+                                                {subjects.map((subject) => (
+                                                    <div
+                                                        key={subject._id}
+                                                        className={`px-5 py-4 hover:bg-gray-50 cursor-pointer flex items-center transition-colors duration-200 ${
+                                                            selectedSubject === subject._id ? 'bg-primary/5 border-l-4 border-primary' : ''
+                                                        }`}
+                                                        onClick={() => handleSubjectSelect(subject._id, subject.name)}
+                                                    >
+                                                        <div className="bg-primary/10 p-3 rounded-full mr-4">
+                                                            <FaBook className="text-primary text-lg" />
+                                                        </div>
+                                                        <div>
+                                                            <div className="font-medium text-gray-800 text-lg">{subject.name}</div>
+                                                            {subject.code && (
+                                                                <div className="text-sm text-gray-500 mt-1">Code: {subject.code}</div>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+
+                                <div className="flex justify-center">
+                                    <button
+                                        className={`inline-flex items-center px-8 py-4 text-lg font-bold rounded-lg transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 ${
+                                            selectedSubject
+                                                ? 'bg-primary text-white hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50'
+                                                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                        }`}
+                                        onClick={startQuiz}
+                                        disabled={!selectedSubject}
+                                    >
+                                        Start Test <FaArrowRight className="ml-3" />
+                                    </button>
+                                </div>
                             </div>
-                        </div>
-                    ) : (
-                        <div className="p-8 text-center">
-                            <p className="text-gray-600 text-lg">No subjects available for your current academic details.</p>
-                            <p className="text-sm text-gray-500 mt-3">Please contact your administrator if you believe this is an error.</p>
-                        </div>
-                    )}
-                </div>
+                        ) : (
+                            <div className="p-8 text-center">
+                                <p className="text-gray-600 text-lg">No subjects available for your current academic details.</p>
+                                <p className="text-sm text-gray-500 mt-3">Please contact your administrator if you believe this is an error.</p>
+                            </div>
+                        )}
+                    </div>
+                )}
             </div>
         </div>
     );

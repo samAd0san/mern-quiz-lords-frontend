@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import '../styles/App.css';
 
 /* Import Components */
@@ -20,10 +20,14 @@ import About from './About'
 import { ToastContainer } from "react-toastify";
 import ScrollToTop from "../utils/ScrollToTop";
 
+// Create a wrapper component to conditionally render Header and Footer
 const Layout = () => {
+  const location = useLocation();
+  const isQuizPage = location.pathname === '/quiz';
+  
   return (
     <div className="flex flex-col min-h-screen">
-      <Header />
+      {!isQuizPage && <Header />}
       <div className="flex-grow">
         <Routes>
           <Route path="/" element={<Home />} />
@@ -38,7 +42,7 @@ const Layout = () => {
           <Route path="/faculty" element={<ResultTable />} />
         </Routes>
       </div>
-      <Footer />
+      {!isQuizPage && <Footer />}
       <ScrollToTop />
       <ToastContainer />
     </div>
@@ -47,6 +51,15 @@ const Layout = () => {
 
 export default function App() {
   const [isLoggedin, setLoggedin] = useState(false);
+  
+  // Initialize authentication state on app load
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      setLoggedin(true);
+    }
+  }, []);
+  
   return (
     <BrowserRouter>
       <UserContext.Provider value={{ isLoggedin, setLoggedin }}>
