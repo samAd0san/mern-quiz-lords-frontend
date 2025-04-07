@@ -1,25 +1,80 @@
 import React, { useEffect, useState } from 'react';
-import { getServerData } from '../helper/helper';
+import { useSelector } from 'react-redux';
+import axios from 'axios';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
 export default function ResultTable() {
     const [data, setData] = useState([]);
     const [expandedRows, setExpandedRows] = useState(new Set());
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const userId = useSelector(state => state.result.userId);
 
     useEffect(() => {
         // Fetch data on component mount
         const fetchData = async () => {
             try {
-                const result = await getServerData(`${process.env.REACT_APP_BACKEND_URI}/api/result`);
-                setData(result);
+                setLoading(true);
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    throw new Error('No token found');
+                }
+
+                // Get the selected subject ID from localStorage
+                const selectedSubjectId = localStorage.getItem("selectedSubjectId");
+                if (!selectedSubjectId) {
+                    throw new Error('No subject selected');
+                }
+
+                // Get user email from localStorage
+                const email = localStorage.getItem('userEmail');
+                if (!email) {
+                    throw new Error('No user email found');
+                }
+
+                // Fetch user profile to get roll number
+                const userResponse = await axios.get(
+                    `${process.env.REACT_APP_BACKEND_URI}/users/profile/${email}`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
+                );
+
+                const rollNumber = userResponse.data.rollNo;
+                if (!rollNumber) {
+                    throw new Error('No roll number found');
+                }
+
+                // Fetch results for the user and subject
+                const resultResponse = await axios.get(
+                    `${process.env.REACT_APP_BACKEND_URI}/api/result/filter?rollNumber=${rollNumber}&subjectId=${selectedSubjectId}`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
+                );
+
+                console.log("Result API response:", resultResponse.data);
+                
+                if (resultResponse.data && resultResponse.data.status === "success" && resultResponse.data.data) {
+                    setData(resultResponse.data.data);
+                } else {
+                    setData([]);
+                }
             } catch (error) {
                 console.error('Error fetching data:', error);
+                setError(error.message || 'Failed to load results');
+            } finally {
+                setLoading(false);
             }
         };
 
         fetchData();
-    }, []);
+    }, [userId]);
 
     const handleRowClick = (index) => {
         setExpandedRows(prevState => {
@@ -56,27 +111,47 @@ export default function ResultTable() {
         });
     };
 
+    if (loading) {
+        return (
+            <div className="flex justify-center items-center py-8">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative my-4" role="alert">
+                <strong className="font-bold">Error!</strong>
+                <span className="block sm:inline"> {error}</span>
+            </div>
+        );
+    }
+
     return (
         <div className='overflow-x-auto'>
-            <button 
-                onClick={exportToPDF} 
-                className='bg-blue-500 text-white px-4 py-2 rounded mt-2 mb-2 ml-2 hover:bg-blue-600'
-            >
-                Export to PDF
-            </button>
+            {data.length > 0 && (
+                <button 
+                    onClick={exportToPDF} 
+                    className='bg-blue-500 text-white px-4 py-2 rounded mt-2 mb-2 ml-2 hover:bg-blue-600'
+                >
+                    Export to PDF
+                </button>
+            )}
             <table id='result-table' className='min-w-full bg-white border border-gray-300 mt-4 mb-20'>
                 <thead className='bg-secondary text-white'>
                     <tr>
                         <th className='px-6 py-3 text-medium text-lg'>SR</th>
-                        <th className='px-6 py-3 text-medium text-lg'>Roll Number</th>
+                        <th className='px-6 py-3 text-medium text-lg'>Date</th>
                         <th className='px-6 py-3 text-medium text-lg'>Attempted</th>
-                        <th className='px-6 py-3 text-medium text-lg'>Total Marks</th>
+                        <th className='px-6 py-3 text-medium text-lg'>Points</th>
+                        <th className='px-6 py-3 text-medium text-lg'>Status</th>
                     </tr>
                 </thead>
                 <tbody>
                     {data.length === 0 ? (
                         <tr>
-                            <td colSpan="4" className="text-center py-4 font-bold text-red-500 text-2xl">No Data Found</td>
+                            <td colSpan="5" className="text-center py-4 font-bold text-red-500 text-2xl">No Results Found</td>
                         </tr>
                     ) : (
                         data.map((v, i) => (
@@ -86,15 +161,26 @@ export default function ResultTable() {
                                     onClick={() => handleRowClick(i)}
                                 >
                                     <td className='px-6 py-4 font-bold text-medium text-lg'>{i + 1}</td>
-                                    <td className='px-6 py-4 font-bold text-medium text-lg'>{v?.username || ''}</td>
-                                    <td className='px-6 py-4 text-medium text-lg'>{v?.attempts || 0}</td>
-                                    <td className='px-6 py-4 text-medium text-lg'>{v?.points || 0}</td>
+                                    <td className='px-6 py-4 font-bold text-medium text-lg'>
+                                        {new Date(v.createdAt).toLocaleDateString()}
+                                    </td>
+                                    <td className='px-6 py-4 text-medium text-lg'>{v.attempts || 0}</td>
+                                    <td className='px-6 py-4 text-medium text-lg'>{v.points || 0}</td>
+                                    <td className='px-6 py-4 text-medium text-lg'>
+                                        <span className={`px-2 py-1 rounded-full text-sm font-medium ${
+                                            v.achieved === 'Passed' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                                        }`}>
+                                            {v.achieved || 'N/A'}
+                                        </span>
+                                    </td>
                                 </tr>
                                 {expandedRows.has(i) && (
                                     <React.Fragment>
                                         <tr>
-                                            <td colSpan="4" className='p-4'>
-                                                <h3 className='text-lg font-bold mb-4 text-center text-blue-600'><span className='font-semibold text-black'>Roll Number:</span> {v?.username || ''}</h3>
+                                            <td colSpan="5" className='p-4'>
+                                                <h3 className='text-lg font-bold mb-4 text-center text-blue-600'>
+                                                    <span className='font-semibold text-black'>Result Details:</span> {new Date(v.createdAt).toLocaleString()}
+                                                </h3>
                                                 <table className='min-w-full bg-gray-100 border'>
                                                     <thead>
                                                         <tr>
@@ -103,7 +189,7 @@ export default function ResultTable() {
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        {v?.result?.map((ans, idx) => (
+                                                        {v.result && v.result.map((ans, idx) => (
                                                             <tr key={idx} className='text-center'>
                                                                 <td className='px-6 py-4 border text-medium text-lg'>{idx + 1}</td>
                                                                 <td className='px-6 py-4 border text-medium text-lg'>{ans !== null ? ans : 'N/A'}</td>

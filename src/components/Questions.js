@@ -3,7 +3,7 @@ import { useFetchQuestion } from "../hooks/FetchQuestions";
 import { useSelector } from "react-redux";
 import Loader from "../utils/Loader";
 import Error from "../utils/Error";
-import { FaQuestionCircle } from "react-icons/fa";
+import { FaQuestionCircle, FaExclamationTriangle } from "react-icons/fa";
 
 export default function Questions({ onChecked, selectedAnswer }) {
   const [{ isLoading, apiData, serverError }] = useFetchQuestion();
@@ -12,7 +12,7 @@ export default function Questions({ onChecked, selectedAnswer }) {
 
   const state = useSelector(state => state)
   useEffect(() => {
-    console.log(state.questions)
+    console.log("Current state:", state.questions)
   })
 
   useEffect(() => {
@@ -34,7 +34,14 @@ export default function Questions({ onChecked, selectedAnswer }) {
   
   if (serverError) return (
     <div className="p-6 bg-red-50 rounded-lg border border-red-200">
-      <Error />
+      <div className="flex items-center mb-4">
+        <FaExclamationTriangle className="text-red-500 text-xl mr-2" />
+        <h3 className="text-lg font-semibold text-red-700">Error Loading Questions</h3>
+      </div>
+      <p className="text-red-600">{serverError}</p>
+      <p className="mt-4 text-gray-600 text-sm">
+        Please check your connection and try again. If the problem persists, contact support.
+      </p>
     </div>
   );
 
@@ -55,7 +62,7 @@ export default function Questions({ onChecked, selectedAnswer }) {
           
           <div className="p-4">
             <ul className="space-y-3">
-              {questions?.options.length > 0 ? (
+              {questions?.options && questions.options.length > 0 ? (
                 questions.options.map((q, i) => (
                   <li 
                     key={i} 

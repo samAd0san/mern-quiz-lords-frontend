@@ -11,9 +11,17 @@ export const questionReducer = createSlice({
         startExamAction: (state, action) => {
             const { questions, answers } = action.payload;
             console.log("Setting questions in state:", questions);
+            console.log("Setting answers in state:", answers);
+            
+            // Ensure questions and answers are arrays
+            if (!Array.isArray(questions) || !Array.isArray(answers)) {
+                console.error("Invalid questions or answers format:", { questions, answers });
+                return state;
+            }
+            
             return {
                 ...state,
-                queue: questions,  // Update to use questions
+                queue: questions,
                 answers
             };
         },

@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { setUserId } from "../redux/result_reducer";
-import { FaSpinner, FaArrowLeft } from "react-icons/fa";
+import { FaSpinner, FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
 const Main = () => {
   const inputRef = useRef(null);
@@ -61,6 +61,7 @@ const Main = () => {
         }
 
         // Fetch user profile
+        console.log('Fetching user profile for email:', email);
         const userResponse = await axios.get(
           `${process.env.REACT_APP_BACKEND_URI}/users/profile/${email}`,
           {
@@ -69,41 +70,33 @@ const Main = () => {
             },
           }
         );
-
-        const rollNumber = userResponse.data.rollNo || "";
+        
+        console.log('User profile response:', userResponse.data);
+        
+        // Check if the response has the expected structure
+        if (!userResponse.data || !userResponse.data.data) {
+          throw new Error('Invalid user profile response structure');
+        }
+        
+        // Extract roll number from the response
+        const rollNumber = userResponse.data.data.rollNo || "";
+        console.log('Extracted roll number:', rollNumber);
+        
         setRollNo(rollNumber);
         if (inputRef.current) {
           inputRef.current.value = rollNumber;
         }
 
-        // Fetch subject details
-        try {
-          const subjectResponse = await axios.get(
-            `${process.env.REACT_APP_BACKEND_URI}/api/subjects/${selectedSubjectId}`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-
+        // Get subject details from localStorage instead of making an API call
+        const subjectName = localStorage.getItem("selectedSubjectName");
+        if (subjectName) {
           setSubjectInfo({
-            name: subjectResponse.data.name || "Subject",
-            code: subjectResponse.data.code || "",
+            name: subjectName,
+            code: "",
           });
-        } catch (subjectError) {
-          console.error("Error fetching subject details:", subjectError);
-          // If API call fails, try to get subject name from localStorage
-          const subjectName = localStorage.getItem("selectedSubjectName");
-          if (subjectName) {
-            setSubjectInfo({
-              name: subjectName,
-              code: "",
-            });
-          }
         }
       } catch (error) {
-        console.error("Error fetching user or subject info:", error);
+        console.error("Error fetching user info:", error);
         setError(error.message);
       } finally {
         setLoading(false);
@@ -115,7 +108,11 @@ const Main = () => {
 
   const startQuiz = () => {
     if (inputRef.current?.value) {
-      dispatch(setUserId(inputRef.current?.value));
+      console.log("Setting user ID for quiz:", inputRef.current.value);
+      dispatch(setUserId(inputRef.current.value));
+      navigate("/quiz");
+    } else {
+      setError("Roll number is required to start the quiz");
     }
   };
 
@@ -192,13 +189,12 @@ const Main = () => {
           </form>
 
           <div className="flex justify-center">
-            <Link
+            <button
               className="inline-flex items-center px-6 py-3 bg-primary text-white font-bold rounded-md hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
-              to={"/quiz"}
               onClick={startQuiz}
             >
-              Start Quiz
-            </Link>
+              Start Quiz <FaArrowRight className="ml-2" />
+            </button>
           </div>
         </div>
       </div>

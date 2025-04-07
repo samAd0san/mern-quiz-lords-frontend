@@ -30,10 +30,12 @@ export const useFetchQuestion = () => {
             const url = `${process.env.REACT_APP_BACKEND_URI}/api/questions?subjectId=${selectedSubjectId}&rollNumber=${rollNumber}`;
             console.log("Fetching questions from URL:", url);
             
-            const data = await getServerData(url);
+            const response = await getServerData(url);
+            console.log("API Response:", response);
 
-            if (data && data.questions && data.questions.length > 0) {
-              const { questions, answers } = data;
+            // Check if the response has the expected structure
+            if (response && response.status === "success" && response.data && response.data.questions) {
+              const { questions, answers } = response.data;
 
               console.log("Fetched questions:", questions);
               setGetData({ isLoading: false, apiData: questions, serverError: null });
@@ -44,11 +46,15 @@ export const useFetchQuestion = () => {
               // Log state after dispatch to confirm update
               console.log("State after dispatch:", store.getState());
             } else {
-              throw new Error("No Questions Available");
+              throw new Error("Invalid response format or no questions available");
             }
           } catch (error) {
-            setGetData({ isLoading: false, apiData: [], serverError: error.message });
             console.error("Error fetching data:", error);
+            setGetData({ 
+              isLoading: false, 
+              apiData: [], 
+              serverError: error.message || "Failed to load questions. Please try again." 
+            });
           }
         })();
     }, [dispatch, rollNumber]);

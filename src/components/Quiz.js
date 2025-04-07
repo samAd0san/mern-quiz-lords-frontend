@@ -5,7 +5,7 @@ import { MoveNextQuestion, MovePrevQuestion } from "../hooks/FetchQuestions";
 import { PushAnswer, updateResult } from "../hooks/setResult";
 import { useNavigate, Navigate } from "react-router-dom";
 import axios from "axios";
-import { FaSpinner } from "react-icons/fa";
+import { FaSpinner, FaArrowLeft, FaArrowRight, FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 
 export default function Quiz() {
   const [selectedAnswers, setSelectedAnswers] = useState({});
@@ -14,57 +14,24 @@ export default function Quiz() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [subjectName, setSubjectName] = useState("");
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [showConfirmation, setShowConfirmation] = useState(false);
 
   const result = useSelector((state) => state.result.result);
-  const { queue, trace } = useSelector((state) => state.questions);
+  const { queue, trace, answers } = useSelector((state) => state.questions);
+  const rollNumber = useSelector((state) => state.result.userId);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchSubjectInfo = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        if (!token) {
-          throw new Error("No token found");
-        }
-
-        // Get selected subject ID from localStorage
-        const selectedSubjectId = localStorage.getItem("selectedSubjectId");
-        if (!selectedSubjectId) {
-          throw new Error("No subject selected");
-        }
-
-        // Fetch subject details
-        try {
-          const subjectResponse = await axios.get(
-            `${process.env.REACT_APP_BACKEND_URI}/api/subjects/${selectedSubjectId}`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-
-          setSubjectName(subjectResponse.data.name || "Subject");
-        } catch (error) {
-          console.error("Error fetching subject info:", error);
-          // If the API call fails, try to get the subject name from localStorage
-          const subjectName = localStorage.getItem("selectedSubjectName");
-          if (subjectName) {
-            setSubjectName(subjectName);
-          } else {
-            setSubjectName("Quiz");
-          }
-        }
-      } catch (error) {
-        console.error("Error in fetchSubjectInfo:", error);
-        setSubjectName("Quiz");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchSubjectInfo();
+    // Get subject name from localStorage instead of making an API call
+    const subjectName = localStorage.getItem("selectedSubjectName");
+    if (subjectName) {
+      setSubjectName(subjectName);
+    } else {
+      setSubjectName("Quiz");
+    }
+    setLoading(false);
   }, []);
 
   useEffect(() => {
@@ -88,137 +55,242 @@ export default function Quiz() {
   }, [quizStarted]);
 
   useEffect(() => {
-    console.log(trace, selectedAnswers, result);
+    console.log("Quiz state:", { trace, selectedAnswers, result, queue });
   });
 
   function onNext() {
     if (trace < queue.length - 1) {
       // Only move to next question if not at the last question
       dispatch(MoveNextQuestion());
-
-      if (selectedAnswers[trace] !== undefined) {
-        dispatch(updateResult({ trace, checked: selectedAnswers[trace] }));
-      } else {
-        dispatch(updateResult({ trace, checked: undefined }));
-      }
     }
   }
 
   function onPrev() {
     if (trace > 0) {
+      // Only move to previous question if not at the first question
       dispatch(MovePrevQuestion());
-
-      if (selectedAnswers[trace] !== undefined) {
-        dispatch(updateResult({ trace, checked: selectedAnswers[trace] }));
-      }
     }
   }
 
-  function handleAnswerChange(answer) {
-    setSelectedAnswers({
-      ...selectedAnswers,
-      [trace]: answer,
-    });
-
-    dispatch(updateResult({ trace, checked: answer }));
-  }
-
-  function handleSubmit() {
-    setIsSubmitting(true);
-    const updatedAnswers = queue.map((_, index) =>
-      selectedAnswers[index] !== undefined ? selectedAnswers[index] : undefined
-    );
-    dispatch(PushAnswer(updatedAnswers));
-    navigate("/result");
+  function onChecked(i) {
+    setSelectedAnswers((prev) => ({
+      ...prev,
+      [trace]: i,
+    }));
   }
 
   function handleTimeout() {
-    const unansweredQuestions = queue.map((_, index) =>
-      selectedAnswers[index] !== undefined ? selectedAnswers[index] : undefined
-    );
-    dispatch(PushAnswer(unansweredQuestions));
-    navigate("/result");
+    // Auto-submit when timer runs out
+    handleSubmit();
   }
 
-  const formatTime = (seconds) => {
-    const minutes = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${minutes}:${secs < 10 ? `0${secs}` : secs}`;
-  };
+  function showSubmitConfirmation() {
+    setShowConfirmation(true);
+  }
 
-  // Only navigate if explicitly submitting or time runs out
-  if (isSubmitting && result.length && result.length >= queue.length) {
-    return <Navigate to={"/result"} replace={true} />;
+  function cancelSubmission() {
+    setShowConfirmation(false);
+  }
+
+  async function handleSubmit() {
+    if (isSubmitting) return;
+    
+    setIsSubmitting(true);
+    setShowConfirmation(false);
+    
+    try {
+      // Get the user's roll number from Redux state
+      if (!rollNumber) {
+        throw new Error("No roll number found");
+      }
+      
+      // Get the selected subject ID from localStorage
+      const selectedSubjectId = localStorage.getItem("selectedSubjectId");
+      if (!selectedSubjectId) {
+        throw new Error("No subject selected");
+      }
+      
+      // Calculate attempts and points
+      const attempts = Object.keys(selectedAnswers).length;
+      const earnPoints = Object.values(selectedAnswers).filter((answer, index) => 
+        answer === answers[index]
+      ).length;
+      
+      // Determine if passed based on points
+      const totalPoints = queue.length;
+      const achieved = (earnPoints / totalPoints) >= 0.5 ? "Passed" : "Failed";
+      
+      // Prepare the result data according to the API requirements
+      const resultData = {
+        result: Object.values(selectedAnswers),
+        attempts: attempts,
+        points: earnPoints,
+        achieved: achieved
+      };
+      
+      console.log("Submitting result:", resultData);
+      
+      // Submit the result to the API
+      const token = localStorage.getItem("token");
+      const response = await axios.post(
+        `${process.env.REACT_APP_BACKEND_URI}/api/result/${rollNumber}/${selectedSubjectId}`,
+        resultData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      
+      console.log("Result submission response:", response.data);
+      
+      // Navigate to the profile page instead of the result page
+      navigate("/profile");
+    } catch (error) {
+      console.error("Error submitting result:", error);
+      setError(error.message || "Failed to submit result");
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex flex-col justify-center items-center p-4">
-        <div className="text-center">
-          <FaSpinner className="animate-spin text-primary text-5xl mb-4 mx-auto" />
-          <h2 className="text-xl font-semibold text-gray-700">Loading quiz...</h2>
+      <div className="flex flex-col items-center justify-center min-h-screen p-8">
+        <FaSpinner className="animate-spin text-primary text-5xl mb-4" />
+        <p className="text-xl text-gray-700">Loading quiz...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen p-8">
+        <div className="bg-red-50 p-6 rounded-lg border border-red-200 max-w-md w-full text-center">
+          <h2 className="text-xl font-semibold text-red-700 mb-2">Error</h2>
+          <p className="text-red-600 mb-4">{error}</p>
+          <button
+            onClick={() => navigate("/")}
+            className="px-4 py-2 bg-primary text-white rounded-md hover:bg-secondary transition-colors duration-300"
+          >
+            Go Back
+          </button>
         </div>
       </div>
     );
   }
 
+  // Improved check for last question
+  // Make sure queue exists, has items, and we're at the last index
+  const isLastQuestion = Array.isArray(queue) && queue.length > 0 && trace === queue.length - 1;
+  
+  // Log the condition values for debugging
+  console.log("Button rendering condition:", { 
+    queueExists: Array.isArray(queue), 
+    queueLength: queue?.length, 
+    trace, 
+    isLastQuestion 
+  });
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex flex-col justify-center items-center p-4 md:p-6">
-      <div className="w-full max-w-4xl">
-        <div className="bg-gradient-to-r from-primary to-secondary p-4 rounded-t-lg">
-          <h1 className="text-2xl md:text-3xl font-bold text-white text-center">
-            {subjectName}
-          </h1>
+    <div className="max-w-4xl mx-auto p-4">
+      <div className="bg-white rounded-lg shadow-md overflow-hidden">
+        <div className="bg-gradient-to-r from-primary to-secondary p-4 text-white">
+          <h1 className="text-2xl font-bold">{subjectName} Quiz</h1>
+          <div className="flex justify-between items-center mt-2">
+            <p>Question {trace + 1} of {queue?.length || 0}</p>
+            <p>Time remaining: {timer}s</p>
+          </div>
         </div>
         
-        {quizStarted && (
-          <div className="bg-white p-4 border-b border-gray-200 flex justify-between items-center">
-            <div className="text-lg font-medium text-gray-700">
-              Question {trace + 1} of {queue.length}
-            </div>
-            <div className="bg-primary/10 px-4 py-2 rounded-full">
-              <span className="text-primary font-bold">Time left: {formatTime(timer)}</span>
-            </div>
-          </div>
-        )}
-        
-        <div className="bg-white p-6 rounded-b-lg shadow-lg">
-          <div className="mb-6">
-            <Questions
-              onChecked={handleAnswerChange}
-              selectedAnswer={selectedAnswers[trace]}
-            />
-          </div>
-
-          <div className="flex justify-between">
-            {trace > 0 ? (
+        <div className="p-4">
+          <Questions
+            onChecked={onChecked}
+            selectedAnswer={selectedAnswers[trace]}
+          />
+          
+          <div className="flex justify-between mt-6">
+            <button
+              onClick={onPrev}
+              disabled={trace === 0}
+              className={`flex items-center px-4 py-2 rounded-md ${
+                trace === 0
+                  ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+              }`}
+            >
+              <FaArrowLeft className="mr-2" />
+              Previous
+            </button>
+            
+            {isLastQuestion ? (
               <button
-                className="btn bg-gray-200 transition-all duration-300 text-gray-800 font-bold py-2 px-6 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400"
-                onClick={onPrev}
+                onClick={showSubmitConfirmation}
+                disabled={isSubmitting}
+                className="flex items-center px-4 py-2 bg-primary text-white rounded-md hover:bg-secondary transition-colors duration-300"
               >
-                Previous
+                {isSubmitting ? (
+                  <>
+                    <FaSpinner className="animate-spin mr-2" />
+                    Submitting...
+                  </>
+                ) : (
+                  "Submit"
+                )}
               </button>
             ) : (
-              <div></div>
-            )}
-            {trace === queue.length - 1 ? (
               <button
-                className="btn bg-green-500 transition-all duration-300 text-white font-bold py-2 px-6 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500"
-                onClick={handleSubmit}
-              >
-                Submit Quiz
-              </button>
-            ) : (
-              <button
-                className="btn bg-primary transition-all duration-300 text-white font-bold py-2 px-6 rounded-md hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-secondary"
                 onClick={onNext}
+                className="flex items-center px-4 py-2 bg-primary text-white rounded-md hover:bg-secondary transition-colors duration-300"
               >
                 Next
+                <FaArrowRight className="ml-2" />
               </button>
             )}
           </div>
         </div>
       </div>
+
+      {/* Confirmation Modal */}
+      {showConfirmation && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-md w-full overflow-hidden transform transition-all">
+            <div className="bg-gradient-to-r from-primary to-secondary p-4 text-white">
+              <h2 className="text-xl font-bold">Confirm Submission</h2>
+            </div>
+            
+            <div className="p-6">
+              <div className="flex items-center justify-center mb-4">
+                <div className="bg-primary bg-opacity-10 p-3 rounded-full">
+                  <FaCheckCircle className="text-primary text-4xl" />
+                </div>
+              </div>
+              
+              <p className="text-center text-gray-700 mb-6">
+                Are you sure you want to submit your quiz? This action cannot be undone.
+              </p>
+              
+              <div className="flex justify-center space-x-4">
+                <button
+                  onClick={cancelSubmission}
+                  className="flex items-center px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors duration-300"
+                >
+                  <FaTimesCircle className="mr-2" />
+                  Cancel
+                </button>
+                
+                <button
+                  onClick={handleSubmit}
+                  className="flex items-center px-4 py-2 bg-primary text-white rounded-md hover:bg-secondary transition-colors duration-300"
+                >
+                  <FaCheckCircle className="mr-2" />
+                  Submit Quiz
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
