@@ -9,6 +9,7 @@ import { usePublishResult } from '../hooks/setResult';
 import axios from 'axios';
 import Loader from '../utils/Loader';
 import Error from '../utils/Error';
+import { FaTimesCircle } from 'react-icons/fa';
 
 export default function Result() {
     const dispatch = useDispatch();
@@ -118,12 +119,35 @@ export default function Result() {
 
     if (error) {
         return (
-            <div className="min-h-screen flex flex-col justify-center items-center p-4 md:p-6">
-                <Error msg={error} />
-                <div className="mt-4">
-                    <Link to={'/'} onClick={onRestart} className='btn bg-secondary text-white font-bold py-2 px-4 rounded-md hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-secondary'>
-                        Go Back
-                    </Link>
+            <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex flex-col justify-center items-center p-6">
+                <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full text-center">
+                    <div className="bg-red-50 p-6 rounded-lg border border-red-200 mb-6">
+                        <div className="flex items-center justify-center mb-4">
+                            <FaTimesCircle className="text-red-500 text-3xl mr-3" />
+                            <h2 className="text-2xl font-bold text-red-700">Result Error</h2>
+                        </div>
+                        <p className="text-gray-700 mb-4">
+                            {error}
+                        </p>
+                        <div className="flex flex-col sm:flex-row justify-center gap-4">
+                            <button 
+                                onClick={() => window.location.reload()} 
+                                className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors duration-300"
+                            >
+                                Try Again
+                            </button>
+                            <Link 
+                                to={'/'} 
+                                onClick={onRestart} 
+                                className="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition-colors duration-300"
+                            >
+                                Back to Home
+                            </Link>
+                        </div>
+                    </div>
+                    <p className="text-sm text-gray-500 mt-3">
+                        If the problem persists, please contact your administrator.
+                    </p>
                 </div>
             </div>
         );

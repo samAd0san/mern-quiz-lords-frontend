@@ -3,6 +3,8 @@ import { useSelector } from 'react-redux';
 import axios from 'axios';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import { FaSpinner } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
 export default function ResultTable() {
     const [data, setData] = useState([]);
@@ -10,6 +12,7 @@ export default function ResultTable() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const userId = useSelector(state => state.result.userId);
+    const navigate = useNavigate();
 
     useEffect(() => {
         // Fetch data on component mount
@@ -121,9 +124,31 @@ export default function ResultTable() {
 
     if (error) {
         return (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative my-4" role="alert">
-                <strong className="font-bold">Error!</strong>
-                <span className="block sm:inline"> {error}</span>
+            <div className="bg-red-50 p-6 rounded-lg border border-red-200 mb-6">
+                <div className="flex items-center justify-center mb-4">
+                    <FaSpinner className="text-red-500 text-3xl mr-3" />
+                    <h2 className="text-2xl font-bold text-red-700">Unable to Load Results</h2>
+                </div>
+                <p className="text-gray-700 mb-4">
+                    {error}
+                </p>
+                <div className="flex flex-col sm:flex-row justify-center gap-4">
+                    <button 
+                        onClick={() => window.location.reload()} 
+                        className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors duration-300"
+                    >
+                        Try Again
+                    </button>
+                    <button 
+                        onClick={() => navigate('/')} 
+                        className="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition-colors duration-300"
+                    >
+                        Back to Home
+                    </button>
+                </div>
+                <p className="text-sm text-gray-500 mt-3">
+                    If the problem persists, please contact your administrator.
+                </p>
             </div>
         );
     }

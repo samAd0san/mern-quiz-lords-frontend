@@ -112,7 +112,19 @@ function Login() {
             </div>
 
             <ShouldRender when={error}>
-              <Error msg="Invalid email or password" />
+                <div className="bg-red-50 p-4 rounded-lg border border-red-200 mb-4">
+                    <div className="flex items-center">
+                        <div className="flex-shrink-0">
+                            <FaLock className="h-5 w-5 text-red-500" />
+                        </div>
+                        <div className="ml-3">
+                            <h3 className="text-sm font-medium text-red-800">Authentication Error</h3>
+                            <div className="mt-2 text-sm text-red-700">
+                                <p>Invalid email or password. Please check your credentials and try again.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </ShouldRender>
 
             {loading && <Loader />}

@@ -146,13 +146,26 @@ const Home = () => {
         return (
             <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex flex-col justify-center items-center p-6">
                 <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full text-center">
-                    <Error msg={error} />
-                    <button 
-                        onClick={() => window.location.reload()} 
-                        className="mt-4 px-4 py-2 bg-primary text-white rounded-md hover:bg-secondary transition-colors duration-300"
-                    >
-                        Try Again
-                    </button>
+                    <div className="bg-red-50 p-6 rounded-lg border border-red-200 mb-6">
+                        <div className="flex items-center justify-center mb-4">
+                            <FaSpinner className="text-red-500 text-3xl mr-3" />
+                            <h2 className="text-2xl font-bold text-red-700">Ops! No subjects found</h2>
+                        </div>
+                        <p className="text-gray-700 mb-4">
+                            {error}
+                        </p>
+                        <div className="flex flex-col sm:flex-row justify-center gap-4">
+                            <button 
+                                onClick={() => navigate('/signin')} 
+                                className="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition-colors duration-300"
+                            >
+                                Back to Login
+                            </button>
+                        </div>
+                    </div>
+                    <p className="text-sm text-gray-500 mt-3">
+                        If the problem persists, please contact your administrator.
+                    </p>
                 </div>
             </div>
         );
@@ -267,8 +280,49 @@ const Home = () => {
                             </div>
                         ) : (
                             <div className="p-8 text-center">
-                                <p className="text-gray-600 text-lg">No subjects available for your current academic details.</p>
-                                <p className="text-sm text-gray-500 mt-3">Please contact your administrator if you believe this is an error.</p>
+                                <div className="bg-blue-50 p-6 rounded-lg border border-blue-200 mb-6">
+                                    <div className="flex items-center justify-center mb-4">
+                                        <FaBook className="text-blue-500 text-3xl mr-3" />
+                                        <h2 className="text-2xl font-bold text-blue-700">No Subjects Available</h2>
+                                    </div>
+                                    <p className="text-gray-700 mb-4">
+                                        There are currently no subjects available for your academic details.
+                                    </p>
+                                    <p className="text-gray-600 text-sm mb-6">
+                                        This could be because:
+                                    </p>
+                                    <ul className="text-left text-gray-600 mb-6 max-w-md mx-auto">
+                                        <li className="flex items-center mb-2">
+                                            <span className="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>
+                                            The semester hasn't started yet
+                                        </li>
+                                        <li className="flex items-center mb-2">
+                                            <span className="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>
+                                            Subjects haven't been assigned to your branch/year/semester
+                                        </li>
+                                        <li className="flex items-center">
+                                            <span className="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>
+                                            There might be a temporary issue with the system
+                                        </li>
+                                    </ul>
+                                    <div className="flex flex-col sm:flex-row justify-center gap-4">
+                                        <button 
+                                            onClick={() => window.location.reload()} 
+                                            className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-300"
+                                        >
+                                            Refresh Page
+                                        </button>
+                                        <button 
+                                            onClick={() => navigate('/profile')} 
+                                            className="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition-colors duration-300"
+                                        >
+                                            Go to Profile
+                                        </button>
+                                    </div>
+                                </div>
+                                <p className="text-sm text-gray-500 mt-3">
+                                    If you believe this is an error, please contact your administrator.
+                                </p>
                             </div>
                         )}
                     </div>

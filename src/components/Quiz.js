@@ -195,25 +195,45 @@ export default function Quiz() {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen p-8">
-        <FaSpinner className="animate-spin text-primary text-5xl mb-4" />
-        <p className="text-xl text-gray-700">Loading quiz...</p>
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex flex-col justify-center items-center p-6">
+        <div className="text-center">
+          <FaSpinner className="animate-spin text-primary text-5xl mb-4 mx-auto" />
+          <h2 className="text-xl font-semibold text-gray-700">Loading your quiz...</h2>
+        </div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen p-8">
-        <div className="bg-red-50 p-6 rounded-lg border border-red-200 max-w-md w-full text-center">
-          <h2 className="text-xl font-semibold text-red-700 mb-2">Error</h2>
-          <p className="text-red-600 mb-4">{error}</p>
-          <button
-            onClick={() => navigate("/")}
-            className="px-4 py-2 bg-primary text-white rounded-md hover:bg-secondary transition-colors duration-300"
-          >
-            Go Back
-          </button>
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex flex-col justify-center items-center p-6">
+        <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full text-center">
+          <div className="bg-red-50 p-6 rounded-lg border border-red-200 mb-6">
+            <div className="flex items-center justify-center mb-4">
+              <FaTimesCircle className="text-red-500 text-3xl mr-3" />
+              <h2 className="text-2xl font-bold text-red-700">Quiz Error</h2>
+            </div>
+            <p className="text-gray-700 mb-4">
+              {error}
+            </p>
+            <div className="flex flex-col sm:flex-row justify-center gap-4">
+              <button 
+                onClick={() => window.location.reload()} 
+                className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors duration-300"
+              >
+                Try Again
+              </button>
+              <button 
+                onClick={() => navigate('/')} 
+                className="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition-colors duration-300"
+              >
+                Back to Home
+              </button>
+            </div>
+          </div>
+          <p className="text-sm text-gray-500 mt-3">
+            If the problem persists, please contact your administrator.
+          </p>
         </div>
       </div>
     );
@@ -232,30 +252,32 @@ export default function Quiz() {
   });
 
   return (
-    <div className="max-w-4xl mx-auto p-4">
-      <div className="bg-white rounded-lg shadow-md overflow-hidden">
-        <div className="bg-gradient-to-r from-primary to-secondary p-4 text-white">
-          <h1 className="text-2xl font-bold">{subjectName} Quiz</h1>
-          <div className="flex justify-between items-center mt-2">
-            <p>Question {trace + 1} of {queue?.length || 0}</p>
-            <p>Time remaining: {timer}s</p>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex flex-col items-center justify-center p-4 py-8">
+      <div className="w-full max-w-4xl bg-white rounded-xl shadow-lg overflow-hidden">
+        <div className="bg-gradient-to-r from-primary to-secondary p-6 text-white">
+          <h1 className="text-3xl font-bold">{subjectName} Quiz</h1>
+          <div className="flex justify-between items-center mt-4">
+            <p className="text-lg">Question {trace + 1} of {queue?.length || 0}</p>
+            <div className="bg-white/20 px-4 py-2 rounded-full">
+              <p className="text-lg font-medium">Time remaining: {timer}s</p>
+            </div>
           </div>
         </div>
         
-        <div className="p-4">
+        <div className="p-6">
           <Questions
             onChecked={onChecked}
             selectedAnswer={selectedAnswers[trace]}
           />
           
-          <div className="flex justify-between mt-6">
+          <div className="flex justify-between mt-8">
             <button
               onClick={onPrev}
               disabled={trace === 0}
-              className={`flex items-center px-4 py-2 rounded-md ${
+              className={`flex items-center px-5 py-2.5 rounded-lg transition-all duration-300 ${
                 trace === 0
                   ? "bg-gray-200 text-gray-500 cursor-not-allowed"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200 hover:shadow-md"
               }`}
             >
               <FaArrowLeft className="mr-2" />
@@ -266,7 +288,7 @@ export default function Quiz() {
               <button
                 onClick={showSubmitConfirmation}
                 disabled={isSubmitting}
-                className="flex items-center px-4 py-2 bg-primary text-white rounded-md hover:bg-secondary transition-colors duration-300"
+                className="flex items-center px-5 py-2.5 bg-primary text-white rounded-lg hover:bg-secondary transition-all duration-300 hover:shadow-md"
               >
                 {isSubmitting ? (
                   <>
@@ -280,7 +302,7 @@ export default function Quiz() {
             ) : (
               <button
                 onClick={onNext}
-                className="flex items-center px-4 py-2 bg-primary text-white rounded-md hover:bg-secondary transition-colors duration-300"
+                className="flex items-center px-5 py-2.5 bg-primary text-white rounded-lg hover:bg-secondary transition-all duration-300 hover:shadow-md"
               >
                 Next
                 <FaArrowRight className="ml-2" />
@@ -293,26 +315,26 @@ export default function Quiz() {
       {/* Confirmation Modal */}
       {showConfirmation && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg shadow-xl max-w-md w-full overflow-hidden transform transition-all">
-            <div className="bg-gradient-to-r from-primary to-secondary p-4 text-white">
-              <h2 className="text-xl font-bold">Confirm Submission</h2>
+          <div className="bg-white rounded-xl shadow-xl max-w-md w-full overflow-hidden transform transition-all">
+            <div className="bg-gradient-to-r from-primary to-secondary p-5 text-white">
+              <h2 className="text-2xl font-bold">Confirm Submission</h2>
             </div>
             
             <div className="p-6">
               <div className="flex items-center justify-center mb-4">
-                <div className="bg-primary bg-opacity-10 p-3 rounded-full">
+                <div className="bg-primary bg-opacity-10 p-4 rounded-full">
                   <FaCheckCircle className="text-primary text-4xl" />
                 </div>
               </div>
               
-              <p className="text-center text-gray-700 mb-6">
+              <p className="text-center text-gray-700 mb-6 text-lg">
                 Are you sure you want to submit your quiz? This action cannot be undone.
               </p>
               
               <div className="flex justify-center space-x-4">
                 <button
                   onClick={cancelSubmission}
-                  className="flex items-center px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors duration-300"
+                  className="flex items-center px-5 py-2.5 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-all duration-300 hover:shadow-md"
                 >
                   <FaTimesCircle className="mr-2" />
                   Cancel
@@ -320,7 +342,7 @@ export default function Quiz() {
                 
                 <button
                   onClick={handleSubmit}
-                  className="flex items-center px-4 py-2 bg-primary text-white rounded-md hover:bg-secondary transition-colors duration-300"
+                  className="flex items-center px-5 py-2.5 bg-primary text-white rounded-lg hover:bg-secondary transition-all duration-300 hover:shadow-md"
                 >
                   <FaCheckCircle className="mr-2" />
                   Submit Quiz
