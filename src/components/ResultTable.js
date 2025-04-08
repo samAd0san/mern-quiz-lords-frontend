@@ -24,36 +24,9 @@ export default function ResultTable() {
                     throw new Error('No token found');
                 }
 
-                // Get the selected subject ID from localStorage
-                const selectedSubjectId = localStorage.getItem("selectedSubjectId");
-                if (!selectedSubjectId) {
-                    throw new Error('No subject selected');
-                }
-
-                // Get user email from localStorage
-                const email = localStorage.getItem('userEmail');
-                if (!email) {
-                    throw new Error('No user email found');
-                }
-
-                // Fetch user profile to get roll number
-                const userResponse = await axios.get(
-                    `${process.env.REACT_APP_BACKEND_URI}/users/profile/${email}`,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    }
-                );
-
-                const rollNumber = userResponse.data.rollNo;
-                if (!rollNumber) {
-                    throw new Error('No roll number found');
-                }
-
-                // Fetch results for the user and subject
+                // Fetch all results from the API
                 const resultResponse = await axios.get(
-                    `${process.env.REACT_APP_BACKEND_URI}/api/result/filter?rollNumber=${rollNumber}&subjectId=${selectedSubjectId}`,
+                    `${process.env.REACT_APP_BACKEND_URI}/api/result`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,
@@ -167,6 +140,7 @@ export default function ResultTable() {
                 <thead className='bg-secondary text-white'>
                     <tr>
                         <th className='px-6 py-3 text-medium text-lg'>SR</th>
+                        <th className='px-6 py-3 text-medium text-lg'>Subject</th>
                         <th className='px-6 py-3 text-medium text-lg'>Date</th>
                         <th className='px-6 py-3 text-medium text-lg'>Attempted</th>
                         <th className='px-6 py-3 text-medium text-lg'>Points</th>
@@ -176,7 +150,7 @@ export default function ResultTable() {
                 <tbody>
                     {data.length === 0 ? (
                         <tr>
-                            <td colSpan="5" className="text-center py-4 font-bold text-red-500 text-2xl">No Results Found</td>
+                            <td colSpan="6" className="text-center py-4 font-bold text-red-500 text-2xl">No Results Found</td>
                         </tr>
                     ) : (
                         data.map((v, i) => (
@@ -186,6 +160,9 @@ export default function ResultTable() {
                                     onClick={() => handleRowClick(i)}
                                 >
                                     <td className='px-6 py-4 font-bold text-medium text-lg'>{i + 1}</td>
+                                    <td className='px-6 py-4 font-bold text-medium text-lg'>
+                                        {v.subject?.name || "N/A"}
+                                    </td>
                                     <td className='px-6 py-4 font-bold text-medium text-lg'>
                                         {new Date(v.createdAt).toLocaleDateString()}
                                     </td>
@@ -202,7 +179,7 @@ export default function ResultTable() {
                                 {expandedRows.has(i) && (
                                     <React.Fragment>
                                         <tr>
-                                            <td colSpan="5" className='p-4'>
+                                            <td colSpan="6" className='p-4'>
                                                 <h3 className='text-lg font-bold mb-4 text-center text-blue-600'>
                                                     <span className='font-semibold text-black'>Result Details:</span> {new Date(v.createdAt).toLocaleString()}
                                                 </h3>

@@ -9,7 +9,7 @@ import { usePublishResult } from '../hooks/setResult';
 import axios from 'axios';
 import Loader from '../utils/Loader';
 import Error from '../utils/Error';
-import { FaTimesCircle } from 'react-icons/fa';
+import { FaTimesCircle, FaSpinner } from 'react-icons/fa';
 
 export default function Result() {
     const dispatch = useDispatch();
@@ -17,6 +17,7 @@ export default function Result() {
     const [apiResult, setApiResult] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [expandedRows, setExpandedRows] = useState(new Set());
 
     useEffect(() => {
         console.log("Result component mounted with data:", { result, userId, queue, answers });
@@ -26,21 +27,15 @@ export default function Result() {
             try {
                 setLoading(true);
                 
-                // Get the selected subject ID from localStorage
-                const selectedSubjectId = localStorage.getItem("selectedSubjectId");
-                if (!selectedSubjectId) {
-                    throw new Error("No subject selected");
-                }
-                
                 // Get the token from localStorage
                 const token = localStorage.getItem("token");
                 if (!token) {
                     throw new Error("No authentication token found");
                 }
                 
-                // Make API request to get the result
+                // Make API request to get all results
                 const response = await axios.get(
-                    `${process.env.REACT_APP_BACKEND_URI}/api/result/filter?rollNumber=${userId}&subjectId=${selectedSubjectId}`,
+                    `${process.env.REACT_APP_BACKEND_URI}/api/result`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`
@@ -109,6 +104,18 @@ export default function Result() {
         dispatch(resetResultAction()); // reset the result state
     }
 
+    const handleRowClick = (index) => {
+        setExpandedRows(prevState => {
+            const newExpandedRows = new Set(prevState);
+            if (newExpandedRows.has(index)) {
+                newExpandedRows.delete(index);
+            } else {
+                newExpandedRows.add(index);
+            }
+            return newExpandedRows;
+        });
+    };
+
     if (loading) {
         return (
             <div className="min-h-screen flex flex-col justify-center items-center p-4 md:p-6">
@@ -155,94 +162,113 @@ export default function Result() {
 
     return (
         <div className='min-h-screen flex flex-col justify-center items-center p-4 md:p-6'>
-            <h1 className='text-3xl md:text-4xl font-bold text-primary mb-6 md:mb-8'>Your Result</h1>
+            <h1 className='text-3xl md:text-4xl font-bold text-primary mb-6 md:mb-8'>Your Results</h1>
 
-            <div className='bg-white p-4 md:p-6 rounded-md shadow-lg border border-gray-200 w-full max-w-md md:max-w-3xl mb-6 md:mb-8'>
-                <div className='flex justify-between mb-4'>
-                    <span className='text-sm md:text-lg text-tertiary'>Username</span>
-                    <span className='font-bold text-sm md:text-lg text-gray-800'>{userId || ""}</span>
-                </div>
-                
-                {apiResult && apiResult.length > 0 ? (
-                    <>
-                        <div className='flex justify-between mb-4'>
-                            <span className='text-sm md:text-lg text-tertiary'>Subject:</span>
-                            <span className='font-bold text-sm md:text-lg text-gray-800'>{apiResult[0].subject?.name || ""}</span>
-                        </div>
-                        <div className='flex justify-between mb-4'>
-                            <span className='text-sm md:text-lg text-tertiary'>Total Questions:</span>
-                            <span className='font-bold text-sm md:text-lg text-gray-800'>{apiResult[0].result?.length || 0}</span>
-                        </div>
-                        <div className='flex justify-between mb-4'>
-                            <span className='text-sm md:text-lg text-tertiary'>Questions Attempted:</span>
-                            <span className='font-bold text-sm md:text-lg text-gray-800'>{apiResult[0].attempts || 0}</span>
-                        </div>
-                        <div className='flex justify-between mb-4'>
-                            <span className='text-sm md:text-lg text-tertiary'>Your Marks:</span>
-                            <span className='font-bold text-sm md:text-lg text-gray-800'>{apiResult[0].points || 0}</span>
-                        </div>
-                        <div className='flex justify-between mb-4'>
-                            <span className='text-sm md:text-lg text-tertiary'>Quiz Result:</span>
-                            <span style={{ color: `${apiResult[0].achieved === "Passed" ? "#10B981" : "#ff2a66"}` }} className='font-bold'>{apiResult[0].achieved || ""}</span>
-                        </div>
-                    </>
-                ) : (
-                    <>
-                        <div className='flex justify-between mb-4'>
-                            <span className='text-sm md:text-lg text-tertiary'>Total Marks:</span>
-                            <span className='font-bold text-sm md:text-lg text-gray-800'>{totalPoints || 0}</span>
-                        </div>
-                        <div className='flex justify-between mb-4'>
-                            <span className='text-sm md:text-lg text-tertiary'>Total Questions:</span>
-                            <span className='font-bold text-sm md:text-lg text-gray-800'>{queue.length || 0}</span>
-                        </div>
-                        <div className='flex justify-between mb-4'>
-                            <span className='text-sm md:text-lg text-tertiary'>Questions Attempted:</span>
-                            <span className='font-bold text-sm md:text-lg text-gray-800'>{attempts || 0}</span>
-                        </div>
-                        <div className='flex justify-between mb-4'>
-                            <span className='text-sm md:text-lg text-tertiary'>Your Marks:</span>
-                            <span className='font-bold text-sm md:text-lg text-gray-800'>{earnPoints || 0}</span>
-                        </div>
-                        <div className='flex justify-between mb-4'>
-                            <span className='text-sm md:text-lg text-tertiary'>Quiz Result:</span>
-                            <span style={{ color: `${flag ? "#10B981" : "#ff2a66"}` }} className='font-bold'>{flag ? "Passed" : "Failed"}</span>
-                        </div>
-                        <div className='flex justify-between mb-4'>
-                            <span className='text-sm md:text-lg text-tertiary'>Grade:</span>
-                            <span className='font-bold text-sm md:text-lg text-gray-800'>{grade}</span>
-                        </div>
-                    </>
-                )}
-                
-                {apiResult && apiResult.length > 1 && (
-                    <div className='mt-6 pt-4 border-t border-gray-200'>
-                        <h2 className='text-xl font-bold text-primary mb-4'>Previous Attempts</h2>
-                        <div className='overflow-x-auto'>
-                            <table className='min-w-full bg-white border border-gray-200'>
-                                <thead className='bg-gray-100'>
-                                    <tr>
-                                        <th className='px-4 py-2 text-left'>Date</th>
-                                        <th className='px-4 py-2 text-left'>Attempts</th>
-                                        <th className='px-4 py-2 text-left'>Points</th>
-                                        <th className='px-4 py-2 text-left'>Result</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {apiResult.slice(1).map((item, index) => (
-                                        <tr key={index} className={index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
-                                            <td className='px-4 py-2'>{new Date(item.createdAt).toLocaleDateString()}</td>
-                                            <td className='px-4 py-2'>{item.attempts}</td>
-                                            <td className='px-4 py-2'>{item.points}</td>
-                                            <td className='px-4 py-2'>{item.achieved}</td>
+            {apiResult && apiResult.length > 0 ? (
+                <div className='bg-white p-4 md:p-6 rounded-md shadow-lg border border-gray-200 w-full max-w-4xl mb-6 md:mb-8'>
+                    <h2 className='text-xl font-bold text-primary mb-4'>All Quiz Results</h2>
+                    <div className='overflow-x-auto'>
+                        <table className='min-w-full bg-white border border-gray-300'>
+                            <thead className='bg-secondary text-white'>
+                                <tr>
+                                    <th className='px-6 py-3 text-medium text-lg'>SR</th>
+                                    <th className='px-6 py-3 text-medium text-lg'>Subject</th>
+                                    <th className='px-6 py-3 text-medium text-lg'>Date</th>
+                                    <th className='px-6 py-3 text-medium text-lg'>Attempted</th>
+                                    <th className='px-6 py-3 text-medium text-lg'>Points</th>
+                                    <th className='px-6 py-3 text-medium text-lg'>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {apiResult.map((v, i) => (
+                                    <React.Fragment key={i}>
+                                        <tr 
+                                            className='table-body border-b text-center cursor-pointer hover:bg-gray-100' 
+                                            onClick={() => handleRowClick(i)}
+                                        >
+                                            <td className='px-6 py-4 font-bold text-medium text-lg'>{i + 1}</td>
+                                            <td className='px-6 py-4 font-bold text-medium text-lg'>
+                                                {v.subject?.name || "N/A"}
+                                            </td>
+                                            <td className='px-6 py-4 font-bold text-medium text-lg'>
+                                                {new Date(v.createdAt).toLocaleDateString()}
+                                            </td>
+                                            <td className='px-6 py-4 text-medium text-lg'>{v.attempts || 0}</td>
+                                            <td className='px-6 py-4 text-medium text-lg'>{v.points || 0}</td>
+                                            <td className='px-6 py-4 text-medium text-lg'>
+                                                <span className={`px-2 py-1 rounded-full text-sm font-medium ${
+                                                    v.achieved === 'Passed' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                                                }`}>
+                                                    {v.achieved || 'N/A'}
+                                                </span>
+                                            </td>
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
+                                        {expandedRows.has(i) && (
+                                            <React.Fragment>
+                                                <tr>
+                                                    <td colSpan="6" className='p-4'>
+                                                        <h3 className='text-lg font-bold mb-4 text-center text-blue-600'>
+                                                            <span className='font-semibold text-black'>Result Details:</span> {new Date(v.createdAt).toLocaleString()}
+                                                        </h3>
+                                                        <table className='min-w-full bg-gray-100 border'>
+                                                            <thead>
+                                                                <tr>
+                                                                    <th className='px-6 py-3 text-medium text-lg'>Q#</th>
+                                                                    <th className='px-6 py-3 text-medium text-lg'>Answer</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                {v.result && v.result.map((ans, idx) => (
+                                                                    <tr key={idx} className='text-center'>
+                                                                        <td className='px-6 py-4 border text-medium text-lg'>{idx + 1}</td>
+                                                                        <td className='px-6 py-4 border text-medium text-lg'>{ans !== null ? ans : 'N/A'}</td>
+                                                                    </tr>
+                                                                ))}
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </React.Fragment>
+                                        )}
+                                    </React.Fragment>
+                                ))}
+                            </tbody>
+                        </table>
                     </div>
-                )}
-            </div>
+                </div>
+            ) : (
+                <div className='bg-white p-4 md:p-6 rounded-md shadow-lg border border-gray-200 w-full max-w-md md:max-w-3xl mb-6 md:mb-8'>
+                    <div className='flex justify-between mb-4'>
+                        <span className='text-sm md:text-lg text-tertiary'>Username</span>
+                        <span className='font-bold text-sm md:text-lg text-gray-800'>{userId || ""}</span>
+                    </div>
+                    
+                    <div className='flex justify-between mb-4'>
+                        <span className='text-sm md:text-lg text-tertiary'>Total Marks:</span>
+                        <span className='font-bold text-sm md:text-lg text-gray-800'>{totalPoints || 0}</span>
+                    </div>
+                    <div className='flex justify-between mb-4'>
+                        <span className='text-sm md:text-lg text-tertiary'>Total Questions:</span>
+                        <span className='font-bold text-sm md:text-lg text-gray-800'>{queue.length || 0}</span>
+                    </div>
+                    <div className='flex justify-between mb-4'>
+                        <span className='text-sm md:text-lg text-tertiary'>Questions Attempted:</span>
+                        <span className='font-bold text-sm md:text-lg text-gray-800'>{attempts || 0}</span>
+                    </div>
+                    <div className='flex justify-between mb-4'>
+                        <span className='text-sm md:text-lg text-tertiary'>Your Marks:</span>
+                        <span className='font-bold text-sm md:text-lg text-gray-800'>{earnPoints || 0}</span>
+                    </div>
+                    <div className='flex justify-between mb-4'>
+                        <span className='text-sm md:text-lg text-tertiary'>Quiz Result:</span>
+                        <span style={{ color: `${flag ? "#10B981" : "#ff2a66"}` }} className='font-bold'>{flag ? "Passed" : "Failed"}</span>
+                    </div>
+                    <div className='flex justify-between mb-4'>
+                        <span className='text-sm md:text-lg text-tertiary'>Grade:</span>
+                        <span className='font-bold text-sm md:text-lg text-gray-800'>{grade}</span>
+                    </div>
+                </div>
+            )}
 
             {/* Restart Button */}
             <div className='mb-8'>
