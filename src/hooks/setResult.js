@@ -36,6 +36,9 @@ export const usePublishResult = (resultData) => {
             const points = resultData.points || 0;
             const achieved = resultData.achived || "A";
             
+            // Get the set information from localStorage or use a default value
+            const set = localStorage.getItem("quizSet") || "setOne";
+            
             // Check if we're in the Result component (which means the result was already saved)
             const isResultPage = window.location.pathname === '/result';
             if (isResultPage) {
@@ -50,7 +53,8 @@ export const usePublishResult = (resultData) => {
                 result: result,
                 attempts: attempts,
                 points: points,
-                achieved: achieved
+                achieved: achieved,
+                set: set
             };
             
             console.log("Submitting result to API:", apiData);

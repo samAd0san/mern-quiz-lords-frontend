@@ -9,7 +9,7 @@ import { usePublishResult } from '../hooks/setResult';
 import axios from 'axios';
 import Loader from '../utils/Loader';
 import Error from '../utils/Error';
-import { FaTimesCircle, FaSpinner } from 'react-icons/fa';
+import { FaTimesCircle, FaSpinner, FaChevronUp, FaChevronDown } from 'react-icons/fa';
 
 export default function Result() {
     const dispatch = useDispatch();
@@ -171,44 +171,50 @@ export default function Result() {
                         <table className='min-w-full bg-white border border-gray-300'>
                             <thead className='bg-secondary text-white'>
                                 <tr>
-                                    <th className='px-6 py-3 text-medium text-lg'>SR</th>
+                                    <th className='px-6 py-3 text-medium text-lg'>Sr. No.</th>
                                     <th className='px-6 py-3 text-medium text-lg'>Subject</th>
                                     <th className='px-6 py-3 text-medium text-lg'>Date</th>
-                                    <th className='px-6 py-3 text-medium text-lg'>Attempted</th>
+                                    <th className='px-6 py-3 text-medium text-lg'>Set</th>
+                                    <th className='px-6 py-3 text-medium text-lg'>Attempts</th>
                                     <th className='px-6 py-3 text-medium text-lg'>Points</th>
                                     <th className='px-6 py-3 text-medium text-lg'>Status</th>
+                                    <th className='px-6 py-3 text-medium text-lg'>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {apiResult.map((v, i) => (
-                                    <React.Fragment key={i}>
-                                        <tr 
-                                            className='table-body border-b text-center cursor-pointer hover:bg-gray-100' 
-                                            onClick={() => handleRowClick(i)}
-                                        >
-                                            <td className='px-6 py-4 font-bold text-medium text-lg'>{i + 1}</td>
-                                            <td className='px-6 py-4 font-bold text-medium text-lg'>
-                                                {v.subject?.name || "N/A"}
+                                {apiResult.map((result, index) => (
+                                    <>
+                                        <tr key={index} className="hover:bg-gray-50 cursor-pointer" onClick={() => handleRowClick(index)}>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{index + 1}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{result.subject?.name || "N/A"}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                {new Date(result.createdAt).toLocaleDateString()}
                                             </td>
-                                            <td className='px-6 py-4 font-bold text-medium text-lg'>
-                                                {new Date(v.createdAt).toLocaleDateString()}
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                {result.set || "N/A"}
                                             </td>
-                                            <td className='px-6 py-4 text-medium text-lg'>{v.attempts || 0}</td>
-                                            <td className='px-6 py-4 text-medium text-lg'>{v.points || 0}</td>
-                                            <td className='px-6 py-4 text-medium text-lg'>
-                                                <span className={`px-2 py-1 rounded-full text-sm font-medium ${
-                                                    v.achieved === 'Passed' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{result.attempts || 0}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{result.points || 0}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                                                    result.achieved === "A" ? "bg-green-100 text-green-800" :
+                                                    result.achieved === "B" ? "bg-blue-100 text-blue-800" :
+                                                    result.achieved === "C" ? "bg-yellow-100 text-yellow-800" :
+                                                    "bg-red-100 text-red-800"
                                                 }`}>
-                                                    {v.achieved || 'N/A'}
+                                                    {result.achieved || 'N/A'}
                                                 </span>
                                             </td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                {expandedRows.has(index) ? <FaChevronUp /> : <FaChevronDown />}
+                                            </td>
                                         </tr>
-                                        {expandedRows.has(i) && (
+                                        {expandedRows.has(index) && (
                                             <React.Fragment>
                                                 <tr>
                                                     <td colSpan="6" className='p-4'>
                                                         <h3 className='text-lg font-bold mb-4 text-center text-blue-600'>
-                                                            <span className='font-semibold text-black'>Result Details:</span> {new Date(v.createdAt).toLocaleString()}
+                                                            <span className='font-semibold text-black'>Result Details:</span> {new Date(result.createdAt).toLocaleString()}
                                                         </h3>
                                                         <table className='min-w-full bg-gray-100 border'>
                                                             <thead>
@@ -218,7 +224,7 @@ export default function Result() {
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
-                                                                {v.result && v.result.map((ans, idx) => (
+                                                                {result.result && result.result.map((ans, idx) => (
                                                                     <tr key={idx} className='text-center'>
                                                                         <td className='px-6 py-4 border text-medium text-lg'>{idx + 1}</td>
                                                                         <td className='px-6 py-4 border text-medium text-lg'>{ans !== null ? ans : 'N/A'}</td>
@@ -230,7 +236,7 @@ export default function Result() {
                                                 </tr>
                                             </React.Fragment>
                                         )}
-                                    </React.Fragment>
+                                    </>
                                 ))}
                             </tbody>
                         </table>

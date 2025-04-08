@@ -143,6 +143,9 @@ export default function Quiz() {
         throw new Error("No subject selected");
       }
       
+      // Get the quiz set from localStorage or use default
+      const quizSet = localStorage.getItem("quizSet") || "setOne";
+      
       // Calculate attempts and points
       const attempts = Object.keys(selectedAnswers).length;
       const earnPoints = Object.values(selectedAnswers).filter((answer, index) => 
@@ -158,7 +161,8 @@ export default function Quiz() {
         result: Object.values(selectedAnswers),
         attempts: attempts,
         points: earnPoints,
-        achieved: achieved
+        achieved: achieved,
+        set: quizSet
       };
       
       console.log("Submitting result:", resultData);
