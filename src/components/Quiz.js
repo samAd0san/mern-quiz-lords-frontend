@@ -222,12 +222,6 @@ export default function Quiz() {
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
               <button 
-                onClick={() => window.location.reload()} 
-                className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors duration-300"
-              >
-                Try Again
-              </button>
-              <button 
                 onClick={() => navigate('/')} 
                 className="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition-colors duration-300"
               >

@@ -11,9 +11,11 @@ const Header = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Check if token exists and is valid
+    // Check if token exists or if user is faculty
     const token = localStorage.getItem("token");
-    if (!token) {
+    const isFaculty = localStorage.getItem("isFaculty") === "true";
+    
+    if (!token && !isFaculty) {
       setLoggedin(false);
       const currentPath = window.location.pathname;
       if (currentPath !== "/signin" && currentPath !== "/signup") {
@@ -21,7 +23,7 @@ const Header = () => {
         toast.error("Please sign in to continue!");
       }
     } else {
-      // Set logged in state to true if token exists
+      // Set logged in state to true if token exists or user is faculty
       setLoggedin(true);
     }
   }, [isLoggedin, navigate, setLoggedin]);
@@ -33,6 +35,8 @@ const Header = () => {
     localStorage.removeItem("selectedSubjectId");
     localStorage.removeItem("selectedSubjectName");
     localStorage.removeItem("quizCompleted");
+    localStorage.removeItem("isFaculty");
+    localStorage.removeItem("facultyId");
     
     setLoggedin(false);
     navigate("/signin");

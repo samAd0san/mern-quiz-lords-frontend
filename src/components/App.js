@@ -19,6 +19,8 @@ import UserContext from "../context/UserContext";
 import About from './About'
 import { ToastContainer } from "react-toastify";
 import ScrollToTop from "../utils/ScrollToTop";
+import FacultyDashboard from './FacultyDashboard';
+import ManageQuestions from './ManageQuestions';
 
 // Create a wrapper component to conditionally render Header and Footer
 const Layout = () => {
@@ -39,7 +41,9 @@ const Layout = () => {
           <Route path="/profile" element={<Profile />} />
           <Route path="/quiz" element={<CheckUserExist><Quiz /></CheckUserExist>} />
           <Route path="/result" element={<CheckUserExist><Result /></CheckUserExist>} />
+          <Route path="/faculty-dashboard" element={<FacultyDashboard />} />
           <Route path="/faculty" element={<ResultTable />} />
+          <Route path="/manage-questions" element={<ManageQuestions />} />
         </Routes>
       </div>
       {!isQuizPage && <Footer />}
@@ -55,7 +59,9 @@ export default function App() {
   // Initialize authentication state on app load
   useEffect(() => {
     const token = localStorage.getItem('token');
-    if (token) {
+    const isFaculty = localStorage.getItem('isFaculty') === 'true';
+    
+    if (token || isFaculty) {
       setLoggedin(true);
     }
   }, []);

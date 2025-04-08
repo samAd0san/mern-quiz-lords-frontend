@@ -33,8 +33,10 @@ export default function ResultTable() {
             try {
                 setLoading(true);
                 const token = localStorage.getItem('token');
-                if (!token) {
-                    throw new Error('No token found');
+                const isFaculty = localStorage.getItem('isFaculty') === 'true';
+                
+                if (!token && !isFaculty) {
+                    throw new Error('Authentication required');
                 }
 
                 // Fetch all results from the API
@@ -234,9 +236,9 @@ export default function ResultTable() {
                         {showFilters ? 'Hide Filters' : 'Show Filters'}
                         {showFilters ? <FaChevronUp className="ml-1" /> : <FaChevronDown className="ml-1" />}
                     </button>
-                    {data.length > 0 && (
-                        <button 
-                            onClick={exportToPDF} 
+            {data.length > 0 && (
+                <button 
+                    onClick={exportToPDF} 
                             className="bg-white/20 text-white px-3 py-1 rounded-md hover:bg-white/30 transition-colors duration-300 flex items-center"
                         >
                             <FaDownload className="mr-1" />
@@ -319,39 +321,39 @@ export default function ResultTable() {
                         >
                             <FaSearch className="mr-1" />
                             Apply Filters
-                        </button>
+                </button>
                     </div>
                 </div>
             )}
 
             <div className='overflow-x-auto'>
                 <table id='result-table' className='min-w-full bg-white border border-gray-300'>
-                    <thead className='bg-secondary text-white'>
-                        <tr>
-                            <th className='px-6 py-3 text-medium text-lg'>SR</th>
+                <thead className='bg-secondary text-white'>
+                    <tr>
+                        <th className='px-6 py-3 text-medium text-lg'>SR</th>
                             <th className='px-6 py-3 text-medium text-lg'>Roll Number</th>
                             <th className='px-6 py-3 text-medium text-lg'>Student Name</th>
                             <th className='px-6 py-3 text-medium text-lg'>Subject</th>
                             <th className='px-6 py-3 text-medium text-lg'>Set</th>
-                            <th className='px-6 py-3 text-medium text-lg'>Date</th>
-                            <th className='px-6 py-3 text-medium text-lg'>Attempted</th>
-                            <th className='px-6 py-3 text-medium text-lg'>Points</th>
-                            <th className='px-6 py-3 text-medium text-lg'>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {data.length === 0 ? (
-                            <tr>
+                        <th className='px-6 py-3 text-medium text-lg'>Date</th>
+                        <th className='px-6 py-3 text-medium text-lg'>Attempted</th>
+                        <th className='px-6 py-3 text-medium text-lg'>Points</th>
+                        <th className='px-6 py-3 text-medium text-lg'>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {data.length === 0 ? (
+                        <tr>
                                 <td colSpan="9" className="text-center py-4 font-bold text-red-500 text-2xl">No Results Found</td>
-                            </tr>
-                        ) : (
-                            data.map((v, i) => (
-                                <React.Fragment key={i}>
-                                    <tr 
-                                        className='table-body border-b text-center cursor-pointer hover:bg-gray-100' 
-                                        onClick={() => handleRowClick(i)}
-                                    >
-                                        <td className='px-6 py-4 font-bold text-medium text-lg'>{i + 1}</td>
+                        </tr>
+                    ) : (
+                        data.map((v, i) => (
+                            <React.Fragment key={i}>
+                                <tr 
+                                    className='table-body border-b text-center cursor-pointer hover:bg-gray-100' 
+                                    onClick={() => handleRowClick(i)}
+                                >
+                                    <td className='px-6 py-4 font-bold text-medium text-lg'>{i + 1}</td>
                                         <td className='px-6 py-4 font-bold text-medium text-lg'>
                                             {v.rollNumber || v.user?.rollNo || "N/A"}
                                         </td>
@@ -364,27 +366,27 @@ export default function ResultTable() {
                                         <td className='px-6 py-4 font-bold text-medium text-lg'>
                                             {v.set || "N/A"}
                                         </td>
-                                        <td className='px-6 py-4 font-bold text-medium text-lg'>
-                                            {new Date(v.createdAt).toLocaleDateString()}
-                                        </td>
-                                        <td className='px-6 py-4 text-medium text-lg'>{v.attempts || 0}</td>
-                                        <td className='px-6 py-4 text-medium text-lg'>{v.points || 0}</td>
-                                        <td className='px-6 py-4 text-medium text-lg'>
-                                            <span className={`px-2 py-1 rounded-full text-sm font-medium ${
+                                    <td className='px-6 py-4 font-bold text-medium text-lg'>
+                                        {new Date(v.createdAt).toLocaleDateString()}
+                                    </td>
+                                    <td className='px-6 py-4 text-medium text-lg'>{v.attempts || 0}</td>
+                                    <td className='px-6 py-4 text-medium text-lg'>{v.points || 0}</td>
+                                    <td className='px-6 py-4 text-medium text-lg'>
+                                        <span className={`px-2 py-1 rounded-full text-sm font-medium ${
                                                 v.achieved === 'Pass' || v.achieved === 'Passed' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                                            }`}>
-                                                {v.achieved || 'N/A'}
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    {expandedRows.has(i) && (
-                                        <React.Fragment>
-                                            <tr>
+                                        }`}>
+                                            {v.achieved || 'N/A'}
+                                        </span>
+                                    </td>
+                                </tr>
+                                {expandedRows.has(i) && (
+                                    <React.Fragment>
+                                        <tr>
                                                 <td colSpan="9" className='p-4 bg-gray-50'>
                                                     <div className="bg-white rounded-lg shadow-sm p-4">
-                                                        <h3 className='text-lg font-bold mb-4 text-center text-blue-600'>
-                                                            <span className='font-semibold text-black'>Result Details:</span> {new Date(v.createdAt).toLocaleString()}
-                                                        </h3>
+                                                <h3 className='text-lg font-bold mb-4 text-center text-blue-600'>
+                                                    <span className='font-semibold text-black'>Result Details:</span> {new Date(v.createdAt).toLocaleString()}
+                                                </h3>
                                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                                                             <div className="bg-gray-50 p-3 rounded-lg">
                                                                 <h4 className="font-semibold text-gray-700 mb-2">Student Information</h4>
@@ -439,30 +441,30 @@ export default function ResultTable() {
                                                         </div>
                                                         <table className='min-w-full bg-gray-100 border rounded-lg overflow-hidden'>
                                                             <thead className="bg-gray-200">
-                                                                <tr>
-                                                                    <th className='px-6 py-3 text-medium text-lg'>Q#</th>
-                                                                    <th className='px-6 py-3 text-medium text-lg'>Answer</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                {v.result && v.result.map((ans, idx) => (
+                                                        <tr>
+                                                            <th className='px-6 py-3 text-medium text-lg'>Q#</th>
+                                                            <th className='px-6 py-3 text-medium text-lg'>Answer</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {v.result && v.result.map((ans, idx) => (
                                                                     <tr key={idx} className='text-center border-t border-gray-200'>
-                                                                        <td className='px-6 py-4 border text-medium text-lg'>{idx + 1}</td>
-                                                                        <td className='px-6 py-4 border text-medium text-lg'>{ans !== null ? ans : 'N/A'}</td>
-                                                                    </tr>
-                                                                ))}
-                                                            </tbody>
-                                                        </table>
+                                                                <td className='px-6 py-4 border text-medium text-lg'>{idx + 1}</td>
+                                                                <td className='px-6 py-4 border text-medium text-lg'>{ans !== null ? ans : 'N/A'}</td>
+                                                            </tr>
+                                                        ))}
+                                                    </tbody>
+                                                </table>
                                                     </div>
-                                                </td>
-                                            </tr>
-                                        </React.Fragment>
-                                    )}
-                                </React.Fragment>
-                            ))
-                        )}
-                    </tbody>
-                </table>
+                                            </td>
+                                        </tr>
+                                    </React.Fragment>
+                                )}
+                            </React.Fragment>
+                        ))
+                    )}
+                </tbody>
+            </table>
             </div>
         </div>
     );
